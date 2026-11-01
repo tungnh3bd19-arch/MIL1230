@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="50 câu trắc nghiệm MIL1230 Quân sự chung – tự luyện các câu sai đến khi đúng hết. Chạy độc lập, không cần Internet.">
+  <title>MIL1230 – Luyện 50 câu đến khi thuộc</title>
+  <style>
+*{box-sizing:border-box}
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e7eb;--accent:#2457d6;--accent-soft:#eef3ff;--ok:#0f8a4b;--ok-soft:#eaf8f0;--bad:#c62828;--bad-soft:#fff0f0}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;line-height:1.5}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+.top-inner{max-width:980px;margin:auto;padding:12px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.title{font-weight:850;font-size:18px}.sub{font-size:13px;color:var(--muted)}
+.score{font-weight:850;color:var(--accent);background:var(--accent-soft);padding:8px 12px;border-radius:999px}
+.progress-wrap{max-width:980px;margin:auto;padding:0 18px 10px}.progress-track{height:7px;background:#edf0f5;border-radius:999px;overflow:hidden}.progress-bar{height:100%;width:0;background:var(--accent);transition:.2s}
+main{max-width:980px;margin:20px auto 110px;padding:0 18px}
+.notice{background:white;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:14px}.notice.success{border-color:#8ed1ad;background:var(--ok-soft);color:#096a3a}.notice.retry{border-color:#b8c6ef;background:var(--accent-soft);color:#173d9a}
+.question-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 4px 18px rgba(16,24,40,.035);scroll-margin-top:105px}.question-card.correct{border-color:#8ed1ad;background:linear-gradient(0deg,var(--ok-soft),#fff 42%)}.question-card.wrong{border-color:#e7aaaa;background:linear-gradient(0deg,var(--bad-soft),#fff 42%)}
+.qhead{display:flex;align-items:center;gap:8px;margin-bottom:8px}.qnum{font-weight:900;color:var(--accent)}.critical{font-size:11px;font-weight:900;color:var(--bad);background:var(--bad-soft);border:1px solid #efb0b0;border-radius:999px;padding:3px 7px}.status-dot{margin-left:auto;width:10px;height:10px;border-radius:50%;background:#d7dce4}.question-card.answered .status-dot{background:var(--accent)}.question-card.correct .status-dot{background:var(--ok)}.question-card.wrong .status-dot{background:var(--bad)}
+.qtext{font-size:17px;font-weight:750;margin-bottom:14px}.question-image{display:block;max-width:min(100%,520px);max-height:420px;object-fit:contain;margin:10px auto 16px;border:1px solid var(--line);border-radius:12px;background:white}
+.options{display:grid;gap:9px}.option-btn{width:100%;display:grid;grid-template-columns:34px 1fr;gap:8px;text-align:left;align-items:start;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px;cursor:pointer;font:inherit;color:inherit}.option-btn:hover:not(:disabled){border-color:#b8c6ef;background:#f9fbff}.option-btn:disabled{cursor:not-allowed;opacity:1;color:inherit}.option-btn.selected{border-color:#8eabe9;background:var(--accent-soft)}.option-btn.good{border-color:#70c494!important;background:var(--ok-soft)!important}.option-btn.bad{border-color:#e39292!important;background:var(--bad-soft)!important}.letter{font-weight:900;color:var(--accent)}
+.feedback{display:none;margin-top:12px;padding:9px 11px;border-radius:10px;font-weight:800}.feedback.ok{display:block;background:var(--ok-soft);color:var(--ok)}.feedback.bad{display:block;background:var(--bad-soft);color:var(--bad)}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);backdrop-filter:blur(10px);z-index:30}.bottom-inner{max-width:980px;margin:auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.count{font-weight:750;color:var(--muted)}button.action{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}.reset{background:#eef0f4;color:#2d3748}.summary-btn{background:var(--accent);color:white}
+.summary{display:none;background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}.summary.show{display:block}.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.stat{text-align:center;background:#f7f8fb;border-radius:12px;padding:12px}.stat b{display:block;font-size:22px}.loading{padding:28px;text-align:center;color:var(--muted)}
+@media(max-width:620px){.question-card{padding:16px}.qtext{font-size:16px}.summary-grid{grid-template-columns:1fr}}
+
+:root{--ink:#18263e}
+html{scroll-behavior:smooth}
+body{color:var(--ink)}
+.top-inner{align-items:center}
+.subtitle-wide{max-width:660px}
+.meta-line{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:7px}
+.meta-tag{font-size:12px;font-weight:750;background:#f1f4f9;color:#48546a;border:1px solid #e2e7f0;border-radius:999px;padding:3px 9px}
+.group-chip{font-size:12px;font-weight:750;background:#f1f4f9;color:#5b6578;padding:3px 9px;border-radius:999px}
+.question-card:focus-within{box-shadow:0 0 0 3px rgba(36,87,214,.08)}
+.feedback{font-weight:750}
+.answer-detail{display:none;margin-top:10px;border-radius:12px;border:1px solid #e3eaf4;background:#f9fbfe;padding:13px 15px;font-size:14px;line-height:1.6}
+.answer-detail.show{display:block}
+.answer-detail .detail-label{font-weight:850;color:#334b74;margin-bottom:3px}
+.answer-detail .source{margin-top:8px;font-size:12px;color:#687386}
+.option-btn{transition:border-color .12s ease,background-color .12s ease}
+.option-btn:focus-visible,.action:focus-visible{outline:3px solid #91b4ff;outline-offset:2px}
+.summary{scroll-margin-top:110px}
+.summary-detail{margin-top:10px;color:#5b6678;font-size:14px}
+.summary-groups{margin-top:12px;display:grid;gap:7px}
+.group-status{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;color:#586274}
+.group-status b{color:#24385c}
+.notice{font-size:14px}
+.bottom-inner > .actions{display:flex;flex-wrap:wrap;gap:8px}
+button.action:disabled{opacity:.48;cursor:default}
+.jump{background:#edf3ff;color:#2457d6}
+.info-list{margin:0;padding-left:19px}
+.info-list li{margin:4px 0}
+.small-muted{color:#728093;font-size:12px}
+.hint-inline{font-size:12px;color:#667085;margin-top:2px}
+@media(max-width:620px){
+ .top-inner{gap:8px;padding:10px 14px}
+ .title{font-size:16px}
+ .score{font-size:12px;padding:7px 9px}
+ .sub{font-size:12px}
+ main{padding:0 12px;margin-top:14px}
+ .bottom-inner{padding:9px 12px;align-items:flex-start}
+ .bottom-inner > .actions{width:100%}
+ .bottom-inner > .actions button{flex:1;padding:10px 9px;font-size:12px}
+ .qtext{font-size:16px}
+ .option-btn{grid-template-columns:28px 1fr;padding:11px}
+ .group-chip{line-height:1.4}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="top-inner">
+    <div class="subtitle-wide"><div class="title">MIL1230 – Trắc nghiệm 50 câu</div><div class="sub" id="subtitle">Vòng 1: làm đủ 50 câu, sau đó ôn lại các câu sai.</div></div>
+    <div class="score" id="score" aria-live="polite">0/0 đúng</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-track" role="progressbar" aria-label="Tiến độ vòng hiện tại" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack"><div class="progress-bar" id="progress"></div></div></div>
+</header>
+<main>
+  <div class="notice" id="notice"><b>Quy tắc:</b> Chọn một phương án A–D, câu sẽ bị khóa và hiện kết quả ngay. Sau khi hoàn thành vòng, chỉ các câu trả lời sai được đưa sang vòng sau. Tiếp tục đến khi đúng cả 50 câu.</div>
+  <div class="summary" id="summary">
+    <h2 style="margin-top:0" id="summaryTitle">Kết quả vòng hiện tại</h2>
+    <div class="summary-grid">
+      <div class="stat"><b id="sCorrect">0</b>Đúng trong vòng</div>
+      <div class="stat"><b id="sWrong">0</b>Sai trong vòng</div>
+      <div class="stat"><b id="sBlank">50</b>Chưa làm</div>
+    </div>
+    <div class="summary-detail" id="masterySummary">Đã nắm chắc: 0/50 câu</div>
+    <div class="summary-groups" id="groupSummary"></div>
+  </div>
+  <div id="questionsContainer"><section class="question-card" id="card-1" data-q="1" aria-labelledby="question-title-1">
+  <div class="qhead"><span class="qnum">Câu 1</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-1">Theo thứ tự 11 chế độ trong ngày, chế độ số 2 là gì?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="1" data-letter="A" aria-label="Câu 1, phương án A: Kiểm tra sáng"><span class="letter">A</span><span class="option-text">Kiểm tra sáng</span></button><button type="button" class="option-btn" data-q="1" data-letter="B" aria-label="Câu 1, phương án B: Thức dậy"><span class="letter">B</span><span class="option-text">Thức dậy</span></button><button type="button" class="option-btn" data-q="1" data-letter="C" aria-label="Câu 1, phương án C: Thể dục buổi sáng"><span class="letter">C</span><span class="option-text">Thể dục buổi sáng</span></button><button type="button" class="option-btn" data-q="1" data-letter="D" aria-label="Câu 1, phương án D: Treo quốc kỳ"><span class="letter">D</span><span class="option-text">Treo quốc kỳ</span></button></div>
+  <div class="feedback" id="feedback-1" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-1"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-2" data-q="2" aria-labelledby="question-title-2">
+  <div class="qhead"><span class="qnum">Câu 2</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-2">Theo danh sách chế độ ngày trong bài giảng, chế độ số 3 là gì?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="2" data-letter="A" aria-label="Câu 2, phương án A: Thể dục buổi sáng"><span class="letter">A</span><span class="option-text">Thể dục buổi sáng</span></button><button type="button" class="option-btn" data-q="2" data-letter="B" aria-label="Câu 2, phương án B: Kiểm tra sáng"><span class="letter">B</span><span class="option-text">Kiểm tra sáng</span></button><button type="button" class="option-btn" data-q="2" data-letter="C" aria-label="Câu 2, phương án C: Học tập"><span class="letter">C</span><span class="option-text">Học tập</span></button><button type="button" class="option-btn" data-q="2" data-letter="D" aria-label="Câu 2, phương án D: Ăn uống"><span class="letter">D</span><span class="option-text">Ăn uống</span></button></div>
+  <div class="feedback" id="feedback-2" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-2"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-3" data-q="3" aria-labelledby="question-title-3">
+  <div class="qhead"><span class="qnum">Câu 3</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-3">Chế độ số 7 trong ngày của quân đội là nội dung nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="3" data-letter="A" aria-label="Câu 3, phương án A: Đọc báo, nghe tin"><span class="letter">A</span><span class="option-text">Đọc báo, nghe tin</span></button><button type="button" class="option-btn" data-q="3" data-letter="B" aria-label="Câu 3, phương án B: Học tập"><span class="letter">B</span><span class="option-text">Học tập</span></button><button type="button" class="option-btn" data-q="3" data-letter="C" aria-label="Câu 3, phương án C: Lau vũ khí, khí tài, trang bị"><span class="letter">C</span><span class="option-text">Lau vũ khí, khí tài, trang bị</span></button><button type="button" class="option-btn" data-q="3" data-letter="D" aria-label="Câu 3, phương án D: Thể thao, tăng gia sản xuất"><span class="letter">D</span><span class="option-text">Thể thao, tăng gia sản xuất</span></button></div>
+  <div class="feedback" id="feedback-3" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-3"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-4" data-q="4" aria-labelledby="question-title-4">
+  <div class="qhead"><span class="qnum">Câu 4</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-4">Chế độ số 10 theo danh sách 11 chế độ trong ngày là gì?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="4" data-letter="A" aria-label="Câu 4, phương án A: Ngủ nghỉ"><span class="letter">A</span><span class="option-text">Ngủ nghỉ</span></button><button type="button" class="option-btn" data-q="4" data-letter="B" aria-label="Câu 4, phương án B: Đọc báo, nghe tin"><span class="letter">B</span><span class="option-text">Đọc báo, nghe tin</span></button><button type="button" class="option-btn" data-q="4" data-letter="C" aria-label="Câu 4, phương án C: Kiểm tra sáng"><span class="letter">C</span><span class="option-text">Kiểm tra sáng</span></button><button type="button" class="option-btn" data-q="4" data-letter="D" aria-label="Câu 4, phương án D: Điểm danh, điểm quân số"><span class="letter">D</span><span class="option-text">Điểm danh, điểm quân số</span></button></div>
+  <div class="feedback" id="feedback-4" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-4"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-5" data-q="5" aria-labelledby="question-title-5">
+  <div class="qhead"><span class="qnum">Câu 5</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-5">Chế độ nào đứng ngay trước “Điểm danh, điểm quân số” trong thứ tự 11 chế độ?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="5" data-letter="A" aria-label="Câu 5, phương án A: Thể thao, tăng gia sản xuất"><span class="letter">A</span><span class="option-text">Thể thao, tăng gia sản xuất</span></button><button type="button" class="option-btn" data-q="5" data-letter="B" aria-label="Câu 5, phương án B: Đọc báo, nghe tin"><span class="letter">B</span><span class="option-text">Đọc báo, nghe tin</span></button><button type="button" class="option-btn" data-q="5" data-letter="C" aria-label="Câu 5, phương án C: Lau vũ khí, khí tài, trang bị"><span class="letter">C</span><span class="option-text">Lau vũ khí, khí tài, trang bị</span></button><button type="button" class="option-btn" data-q="5" data-letter="D" aria-label="Câu 5, phương án D: Ngủ nghỉ"><span class="letter">D</span><span class="option-text">Ngủ nghỉ</span></button></div>
+  <div class="feedback" id="feedback-5" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-5"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-6" data-q="6" aria-labelledby="question-title-6">
+  <div class="qhead"><span class="qnum">Câu 6</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-6">Bộ ba nào là ba chế độ trong tuần theo bài giảng?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="6" data-letter="A" aria-label="Câu 6, phương án A: Chào cờ, duyệt đội ngũ; Thông báo chính trị; Tổng vệ sinh doanh trại"><span class="letter">A</span><span class="option-text">Chào cờ, duyệt đội ngũ; Thông báo chính trị; Tổng vệ sinh doanh trại</span></button><button type="button" class="option-btn" data-q="6" data-letter="B" aria-label="Câu 6, phương án B: Treo quốc kỳ; Học tập; Ngủ nghỉ"><span class="letter">B</span><span class="option-text">Treo quốc kỳ; Học tập; Ngủ nghỉ</span></button><button type="button" class="option-btn" data-q="6" data-letter="C" aria-label="Câu 6, phương án C: Điểm danh; Đọc báo, nghe tin; Ăn uống"><span class="letter">C</span><span class="option-text">Điểm danh; Đọc báo, nghe tin; Ăn uống</span></button><button type="button" class="option-btn" data-q="6" data-letter="D" aria-label="Câu 6, phương án D: Thể dục sáng; Lau vũ khí; Kiểm tra sáng"><span class="letter">D</span><span class="option-text">Thể dục sáng; Lau vũ khí; Kiểm tra sáng</span></button></div>
+  <div class="feedback" id="feedback-6" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-6"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-7" data-q="7" aria-labelledby="question-title-7">
+  <div class="qhead"><span class="qnum">Câu 7</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-7">Theo lịch chia mùa được bổ sung từ tài liệu tham khảo, khoảng thời gian nào là mùa nóng?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="7" data-letter="A" aria-label="Câu 7, phương án A: 01/01 đến 31/03"><span class="letter">A</span><span class="option-text">01/01 đến 31/03</span></button><button type="button" class="option-btn" data-q="7" data-letter="B" aria-label="Câu 7, phương án B: 01/04 đến 31/10"><span class="letter">B</span><span class="option-text">01/04 đến 31/10</span></button><button type="button" class="option-btn" data-q="7" data-letter="C" aria-label="Câu 7, phương án C: 01/06 đến 31/08"><span class="letter">C</span><span class="option-text">01/06 đến 31/08</span></button><button type="button" class="option-btn" data-q="7" data-letter="D" aria-label="Câu 7, phương án D: 01/11 đến 31/03"><span class="letter">D</span><span class="option-text">01/11 đến 31/03</span></button></div>
+  <div class="feedback" id="feedback-7" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-7"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-8" data-q="8" aria-labelledby="question-title-8">
+  <div class="qhead"><span class="qnum">Câu 8</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-8">Theo lịch chia mùa được bổ sung từ tài liệu tham khảo, mùa lạnh bắt đầu ngày nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="8" data-letter="A" aria-label="Câu 8, phương án A: 01/09"><span class="letter">A</span><span class="option-text">01/09</span></button><button type="button" class="option-btn" data-q="8" data-letter="B" aria-label="Câu 8, phương án B: 01/10"><span class="letter">B</span><span class="option-text">01/10</span></button><button type="button" class="option-btn" data-q="8" data-letter="C" aria-label="Câu 8, phương án C: 01/11"><span class="letter">C</span><span class="option-text">01/11</span></button><button type="button" class="option-btn" data-q="8" data-letter="D" aria-label="Câu 8, phương án D: 01/12"><span class="letter">D</span><span class="option-text">01/12</span></button></div>
+  <div class="feedback" id="feedback-8" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-8"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-9" data-q="9" aria-labelledby="question-title-9">
+  <div class="qhead"><span class="qnum">Câu 9</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-9">Mục đích phù hợp nhất của “Điểm danh, điểm quân số” là gì?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="9" data-letter="A" aria-label="Câu 9, phương án A: Kiểm tra tình hình quân số và quản lý đơn vị"><span class="letter">A</span><span class="option-text">Kiểm tra tình hình quân số và quản lý đơn vị</span></button><button type="button" class="option-btn" data-q="9" data-letter="B" aria-label="Câu 9, phương án B: Thay thế hoàn toàn kiểm tra sáng"><span class="letter">B</span><span class="option-text">Thay thế hoàn toàn kiểm tra sáng</span></button><button type="button" class="option-btn" data-q="9" data-letter="C" aria-label="Câu 9, phương án C: Đánh giá kết quả bắn súng của từng chiến sĩ"><span class="letter">C</span><span class="option-text">Đánh giá kết quả bắn súng của từng chiến sĩ</span></button><button type="button" class="option-btn" data-q="9" data-letter="D" aria-label="Câu 9, phương án D: Thay cho công tác lau vũ khí"><span class="letter">D</span><span class="option-text">Thay cho công tác lau vũ khí</span></button></div>
+  <div class="feedback" id="feedback-9" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-9"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-10" data-q="10" aria-labelledby="question-title-10">
+  <div class="qhead"><span class="qnum">Câu 10</span><span class="group-chip">Chế độ sinh hoạt, học tập và công tác</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-10">Trong thứ tự 11 chế độ trong ngày, “Kiểm tra sáng” nằm ở vị trí nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="10" data-letter="A" aria-label="Câu 10, phương án A: Số 2"><span class="letter">A</span><span class="option-text">Số 2</span></button><button type="button" class="option-btn" data-q="10" data-letter="B" aria-label="Câu 10, phương án B: Số 3"><span class="letter">B</span><span class="option-text">Số 3</span></button><button type="button" class="option-btn" data-q="10" data-letter="C" aria-label="Câu 10, phương án C: Số 4"><span class="letter">C</span><span class="option-text">Số 4</span></button><button type="button" class="option-btn" data-q="10" data-letter="D" aria-label="Câu 10, phương án D: Số 5"><span class="letter">D</span><span class="option-text">Số 5</span></button></div>
+  <div class="feedback" id="feedback-10" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-10"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-11" data-q="11" aria-labelledby="question-title-11">
+  <div class="qhead"><span class="qnum">Câu 11</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-11">Dãy nào liệt kê đúng bảy quân khu được ghi trong bài giảng?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="11" data-letter="A" aria-label="Câu 11, phương án A: 1, 2, 3, 4, 5, 6, 7"><span class="letter">A</span><span class="option-text">1, 2, 3, 4, 5, 6, 7</span></button><button type="button" class="option-btn" data-q="11" data-letter="B" aria-label="Câu 11, phương án B: 1, 2, 3, 4, 5, 7, 9"><span class="letter">B</span><span class="option-text">1, 2, 3, 4, 5, 7, 9</span></button><button type="button" class="option-btn" data-q="11" data-letter="C" aria-label="Câu 11, phương án C: 1, 2, 3, 5, 6, 8, 9"><span class="letter">C</span><span class="option-text">1, 2, 3, 5, 6, 8, 9</span></button><button type="button" class="option-btn" data-q="11" data-letter="D" aria-label="Câu 11, phương án D: 1, 2, 4, 5, 6, 7, 9"><span class="letter">D</span><span class="option-text">1, 2, 4, 5, 6, 7, 9</span></button></div>
+  <div class="feedback" id="feedback-11" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-11"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-12" data-q="12" aria-labelledby="question-title-12">
+  <div class="qhead"><span class="qnum">Câu 12</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-12">Theo phân biệt trong giáo trình, “quân khu” chủ yếu được hiểu là gì?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="12" data-letter="A" aria-label="Câu 12, phương án A: Một binh chủng bảo đảm kỹ thuật"><span class="letter">A</span><span class="option-text">Một binh chủng bảo đảm kỹ thuật</span></button><button type="button" class="option-btn" data-q="12" data-letter="B" aria-label="Câu 12, phương án B: Một quân chủng chuyên về tác chiến trên biển"><span class="letter">B</span><span class="option-text">Một quân chủng chuyên về tác chiến trên biển</span></button><button type="button" class="option-btn" data-q="12" data-letter="C" aria-label="Câu 12, phương án C: Một tổ chức quân sự theo địa bàn lãnh thổ"><span class="letter">C</span><span class="option-text">Một tổ chức quân sự theo địa bàn lãnh thổ</span></button><button type="button" class="option-btn" data-q="12" data-letter="D" aria-label="Câu 12, phương án D: Một trung đội trực thuộc tiểu đoàn"><span class="letter">D</span><span class="option-text">Một trung đội trực thuộc tiểu đoàn</span></button></div>
+  <div class="feedback" id="feedback-12" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-12"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-13" data-q="13" aria-labelledby="question-title-13">
+  <div class="qhead"><span class="qnum">Câu 13</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-13">Theo cách gọi của đề cương về hai Bộ tư lệnh mang tên quân chủng, cặp nào đúng?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="13" data-letter="A" aria-label="Câu 13, phương án A: Hải quân và Phòng không - Không quân"><span class="letter">A</span><span class="option-text">Hải quân và Phòng không - Không quân</span></button><button type="button" class="option-btn" data-q="13" data-letter="B" aria-label="Câu 13, phương án B: Lục quân và Công binh"><span class="letter">B</span><span class="option-text">Lục quân và Công binh</span></button><button type="button" class="option-btn" data-q="13" data-letter="C" aria-label="Câu 13, phương án C: Hải quân và Tăng - Thiết giáp"><span class="letter">C</span><span class="option-text">Hải quân và Tăng - Thiết giáp</span></button><button type="button" class="option-btn" data-q="13" data-letter="D" aria-label="Câu 13, phương án D: Phòng không - Không quân và Thông tin liên lạc"><span class="letter">D</span><span class="option-text">Phòng không - Không quân và Thông tin liên lạc</span></button></div>
+  <div class="feedback" id="feedback-13" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-13"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-14" data-q="14" aria-labelledby="question-title-14">
+  <div class="qhead"><span class="qnum">Câu 14</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-14">Binh chủng nào đảm nhiệm bảo đảm thông tin liên lạc phục vụ chỉ huy?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="14" data-letter="A" aria-label="Câu 14, phương án A: Hóa học"><span class="letter">A</span><span class="option-text">Hóa học</span></button><button type="button" class="option-btn" data-q="14" data-letter="B" aria-label="Câu 14, phương án B: Thông tin liên lạc"><span class="letter">B</span><span class="option-text">Thông tin liên lạc</span></button><button type="button" class="option-btn" data-q="14" data-letter="C" aria-label="Câu 14, phương án C: Công binh"><span class="letter">C</span><span class="option-text">Công binh</span></button><button type="button" class="option-btn" data-q="14" data-letter="D" aria-label="Câu 14, phương án D: Đặc công"><span class="letter">D</span><span class="option-text">Đặc công</span></button></div>
+  <div class="feedback" id="feedback-14" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-14"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-15" data-q="15" aria-labelledby="question-title-15">
+  <div class="qhead"><span class="qnum">Câu 15</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-15">Nhiệm vụ bảo đảm cơ động, vượt vật cản và xây dựng công trình quân sự phù hợp nhất với binh chủng nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="15" data-letter="A" aria-label="Câu 15, phương án A: Công binh"><span class="letter">A</span><span class="option-text">Công binh</span></button><button type="button" class="option-btn" data-q="15" data-letter="B" aria-label="Câu 15, phương án B: Pháo binh"><span class="letter">B</span><span class="option-text">Pháo binh</span></button><button type="button" class="option-btn" data-q="15" data-letter="C" aria-label="Câu 15, phương án C: Thông tin liên lạc"><span class="letter">C</span><span class="option-text">Thông tin liên lạc</span></button><button type="button" class="option-btn" data-q="15" data-letter="D" aria-label="Câu 15, phương án D: Hóa học"><span class="letter">D</span><span class="option-text">Hóa học</span></button></div>
+  <div class="feedback" id="feedback-15" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-15"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-16" data-q="16" aria-labelledby="question-title-16">
+  <div class="qhead"><span class="qnum">Câu 16</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-16">Binh chủng nào gắn trực tiếp với nhiệm vụ phòng hóa và khắc phục hậu quả tác nhân hóa học?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="16" data-letter="A" aria-label="Câu 16, phương án A: Pháo binh"><span class="letter">A</span><span class="option-text">Pháo binh</span></button><button type="button" class="option-btn" data-q="16" data-letter="B" aria-label="Câu 16, phương án B: Đặc công"><span class="letter">B</span><span class="option-text">Đặc công</span></button><button type="button" class="option-btn" data-q="16" data-letter="C" aria-label="Câu 16, phương án C: Hóa học"><span class="letter">C</span><span class="option-text">Hóa học</span></button><button type="button" class="option-btn" data-q="16" data-letter="D" aria-label="Câu 16, phương án D: Tăng - Thiết giáp"><span class="letter">D</span><span class="option-text">Tăng - Thiết giáp</span></button></div>
+  <div class="feedback" id="feedback-16" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-16"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-17" data-q="17" aria-labelledby="question-title-17">
+  <div class="qhead"><span class="qnum">Câu 17</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-17">Lực lượng sử dụng xe tăng, xe thiết giáp để cơ động và tác chiến trên bộ thuộc binh chủng nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="17" data-letter="A" aria-label="Câu 17, phương án A: Pháo binh"><span class="letter">A</span><span class="option-text">Pháo binh</span></button><button type="button" class="option-btn" data-q="17" data-letter="B" aria-label="Câu 17, phương án B: Tăng - Thiết giáp"><span class="letter">B</span><span class="option-text">Tăng - Thiết giáp</span></button><button type="button" class="option-btn" data-q="17" data-letter="C" aria-label="Câu 17, phương án C: Công binh"><span class="letter">C</span><span class="option-text">Công binh</span></button><button type="button" class="option-btn" data-q="17" data-letter="D" aria-label="Câu 17, phương án D: Thông tin liên lạc"><span class="letter">D</span><span class="option-text">Thông tin liên lạc</span></button></div>
+  <div class="feedback" id="feedback-17" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-17"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-18" data-q="18" aria-labelledby="question-title-18">
+  <div class="qhead"><span class="qnum">Câu 18</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-18">Trong sáu binh chủng truyền thống của đề cương, đơn vị nào có chức năng chi viện hỏa lực đặc trưng?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="18" data-letter="A" aria-label="Câu 18, phương án A: Công binh"><span class="letter">A</span><span class="option-text">Công binh</span></button><button type="button" class="option-btn" data-q="18" data-letter="B" aria-label="Câu 18, phương án B: Thông tin liên lạc"><span class="letter">B</span><span class="option-text">Thông tin liên lạc</span></button><button type="button" class="option-btn" data-q="18" data-letter="C" aria-label="Câu 18, phương án C: Hóa học"><span class="letter">C</span><span class="option-text">Hóa học</span></button><button type="button" class="option-btn" data-q="18" data-letter="D" aria-label="Câu 18, phương án D: Pháo binh"><span class="letter">D</span><span class="option-text">Pháo binh</span></button></div>
+  <div class="feedback" id="feedback-18" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-18"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-19" data-q="19" aria-labelledby="question-title-19">
+  <div class="qhead"><span class="qnum">Câu 19</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-19">Quân đoàn 12 được thành lập từ các đơn vị tiền thân nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="19" data-letter="A" aria-label="Câu 19, phương án A: Quân đoàn 1 và Quân đoàn 2"><span class="letter">A</span><span class="option-text">Quân đoàn 1 và Quân đoàn 2</span></button><button type="button" class="option-btn" data-q="19" data-letter="B" aria-label="Câu 19, phương án B: Quân đoàn 2 và Quân đoàn 3"><span class="letter">B</span><span class="option-text">Quân đoàn 2 và Quân đoàn 3</span></button><button type="button" class="option-btn" data-q="19" data-letter="C" aria-label="Câu 19, phương án C: Quân đoàn 3 và Quân đoàn 4"><span class="letter">C</span><span class="option-text">Quân đoàn 3 và Quân đoàn 4</span></button><button type="button" class="option-btn" data-q="19" data-letter="D" aria-label="Câu 19, phương án D: Quân đoàn 1 và Quân đoàn 4"><span class="letter">D</span><span class="option-text">Quân đoàn 1 và Quân đoàn 4</span></button></div>
+  <div class="feedback" id="feedback-19" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-19"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-20" data-q="20" aria-labelledby="question-title-20">
+  <div class="qhead"><span class="qnum">Câu 20</span><span class="group-chip">Tổ chức quân đội - quân chủng, binh chủng</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-20">Theo đợt sắp xếp tổ chức năm 2024, Quân đoàn 34 được thành lập trên cơ sở nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="20" data-letter="A" aria-label="Câu 20, phương án A: Quân đoàn 1 và 2"><span class="letter">A</span><span class="option-text">Quân đoàn 1 và 2</span></button><button type="button" class="option-btn" data-q="20" data-letter="B" aria-label="Câu 20, phương án B: Quân đoàn 1 và 3"><span class="letter">B</span><span class="option-text">Quân đoàn 1 và 3</span></button><button type="button" class="option-btn" data-q="20" data-letter="C" aria-label="Câu 20, phương án C: Quân đoàn 2 và 4"><span class="letter">C</span><span class="option-text">Quân đoàn 2 và 4</span></button><button type="button" class="option-btn" data-q="20" data-letter="D" aria-label="Câu 20, phương án D: Quân đoàn 3 và 4"><span class="letter">D</span><span class="option-text">Quân đoàn 3 và 4</span></button></div>
+  <div class="feedback" id="feedback-20" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-20"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-21" data-q="21" aria-labelledby="question-title-21">
+  <div class="qhead"><span class="qnum">Câu 21</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-21">“Ba môn quân sự phối hợp” theo bài giảng bao gồm những môn nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="21" data-letter="A" aria-label="Câu 21, phương án A: Bắn súng, điều lệnh đội ngũ, chạy bền"><span class="letter">A</span><span class="option-text">Bắn súng, điều lệnh đội ngũ, chạy bền</span></button><button type="button" class="option-btn" data-q="21" data-letter="B" aria-label="Câu 21, phương án B: Bắn súng quân dụng, ném lựu đạn xa đúng hướng, chạy vũ trang"><span class="letter">B</span><span class="option-text">Bắn súng quân dụng, ném lựu đạn xa đúng hướng, chạy vũ trang</span></button><button type="button" class="option-btn" data-q="21" data-letter="C" aria-label="Câu 21, phương án C: Võ thuật, bắn súng, bơi vũ trang"><span class="letter">C</span><span class="option-text">Võ thuật, bắn súng, bơi vũ trang</span></button><button type="button" class="option-btn" data-q="21" data-letter="D" aria-label="Câu 21, phương án D: Ném lựu đạn, vượt vật cản, điều lệnh"><span class="letter">D</span><span class="option-text">Ném lựu đạn, vượt vật cản, điều lệnh</span></button></div>
+  <div class="feedback" id="feedback-21" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-21"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-22" data-q="22" aria-labelledby="question-title-22">
+  <div class="qhead"><span class="qnum">Câu 22</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-22">Theo điều kiện thi bắn trong tài liệu tham khảo, cự ly bắn súng AK/CKC là bao nhiêu?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="22" data-letter="A" aria-label="Câu 22, phương án A: 50 m"><span class="letter">A</span><span class="option-text">50 m</span></button><button type="button" class="option-btn" data-q="22" data-letter="B" aria-label="Câu 22, phương án B: 75 m"><span class="letter">B</span><span class="option-text">75 m</span></button><button type="button" class="option-btn" data-q="22" data-letter="C" aria-label="Câu 22, phương án C: 100 m"><span class="letter">C</span><span class="option-text">100 m</span></button><button type="button" class="option-btn" data-q="22" data-letter="D" aria-label="Câu 22, phương án D: 150 m"><span class="letter">D</span><span class="option-text">150 m</span></button></div>
+  <div class="feedback" id="feedback-22" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-22"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-23" data-q="23" aria-labelledby="question-title-23">
+  <div class="qhead"><span class="qnum">Câu 23</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-23">Trong phần bắn súng tính điểm của ba môn quân sự phối hợp, vận động viên bắn bao nhiêu viên đạn tính điểm?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="23" data-letter="A" aria-label="Câu 23, phương án A: 2 viên"><span class="letter">A</span><span class="option-text">2 viên</span></button><button type="button" class="option-btn" data-q="23" data-letter="B" aria-label="Câu 23, phương án B: 3 viên"><span class="letter">B</span><span class="option-text">3 viên</span></button><button type="button" class="option-btn" data-q="23" data-letter="C" aria-label="Câu 23, phương án C: 4 viên"><span class="letter">C</span><span class="option-text">4 viên</span></button><button type="button" class="option-btn" data-q="23" data-letter="D" aria-label="Câu 23, phương án D: 5 viên"><span class="letter">D</span><span class="option-text">5 viên</span></button></div>
+  <div class="feedback" id="feedback-23" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-23"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-24" data-q="24" aria-labelledby="question-title-24">
+  <div class="qhead"><span class="qnum">Câu 24</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-24">Theo bảng quy đổi môn bắn súng trong tài liệu tham khảo, đạt 30 vòng trên bia tương ứng bao nhiêu điểm xếp hạng?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="24" data-letter="A" aria-label="Câu 24, phương án A: 800 điểm"><span class="letter">A</span><span class="option-text">800 điểm</span></button><button type="button" class="option-btn" data-q="24" data-letter="B" aria-label="Câu 24, phương án B: 900 điểm"><span class="letter">B</span><span class="option-text">900 điểm</span></button><button type="button" class="option-btn" data-q="24" data-letter="C" aria-label="Câu 24, phương án C: 1000 điểm"><span class="letter">C</span><span class="option-text">1000 điểm</span></button><button type="button" class="option-btn" data-q="24" data-letter="D" aria-label="Câu 24, phương án D: 1200 điểm"><span class="letter">D</span><span class="option-text">1200 điểm</span></button></div>
+  <div class="feedback" id="feedback-24" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-24"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-25" data-q="25" aria-labelledby="question-title-25">
+  <div class="qhead"><span class="qnum">Câu 25</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-25">Theo bảng quy đổi môn bắn súng, tổng 27 vòng trên bia tương ứng mức nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="25" data-letter="A" aria-label="Câu 25, phương án A: 630 điểm"><span class="letter">A</span><span class="option-text">630 điểm</span></button><button type="button" class="option-btn" data-q="25" data-letter="B" aria-label="Câu 25, phương án B: 710 điểm"><span class="letter">B</span><span class="option-text">710 điểm</span></button><button type="button" class="option-btn" data-q="25" data-letter="C" aria-label="Câu 25, phương án C: 800 điểm"><span class="letter">C</span><span class="option-text">800 điểm</span></button><button type="button" class="option-btn" data-q="25" data-letter="D" aria-label="Câu 25, phương án D: 900 điểm"><span class="letter">D</span><span class="option-text">900 điểm</span></button></div>
+  <div class="feedback" id="feedback-25" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-25"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-26" data-q="26" aria-labelledby="question-title-26">
+  <div class="qhead"><span class="qnum">Câu 26</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-26">Theo điều lệ tham khảo, ở môn ném lựu đạn, thành tích chính thức được tính theo cách nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="26" data-letter="A" aria-label="Câu 26, phương án A: Cộng cả ba lần ném không kể hợp lệ"><span class="letter">A</span><span class="option-text">Cộng cả ba lần ném không kể hợp lệ</span></button><button type="button" class="option-btn" data-q="26" data-letter="B" aria-label="Câu 26, phương án B: Lấy trung bình các lần ném"><span class="letter">B</span><span class="option-text">Lấy trung bình các lần ném</span></button><button type="button" class="option-btn" data-q="26" data-letter="C" aria-label="Câu 26, phương án C: Lấy lần ném hợp lệ ngắn nhất"><span class="letter">C</span><span class="option-text">Lấy lần ném hợp lệ ngắn nhất</span></button><button type="button" class="option-btn" data-q="26" data-letter="D" aria-label="Câu 26, phương án D: Lấy lần ném hợp lệ xa nhất"><span class="letter">D</span><span class="option-text">Lấy lần ném hợp lệ xa nhất</span></button></div>
+  <div class="feedback" id="feedback-26" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-26"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-27" data-q="27" aria-labelledby="question-title-27">
+  <div class="qhead"><span class="qnum">Câu 27</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-27">Một quả lựu đạn rơi ngoài hành lang ném quy định. Theo nguyên tắc điều lệ, xử lý thành tích lần ném đó thế nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="27" data-letter="A" aria-label="Câu 27, phương án A: Không tính thành tích lần ném đó"><span class="letter">A</span><span class="option-text">Không tính thành tích lần ném đó</span></button><button type="button" class="option-btn" data-q="27" data-letter="B" aria-label="Câu 27, phương án B: Vẫn tính đủ cự ly ném được"><span class="letter">B</span><span class="option-text">Vẫn tính đủ cự ly ném được</span></button><button type="button" class="option-btn" data-q="27" data-letter="C" aria-label="Câu 27, phương án C: Tính một nửa cự ly"><span class="letter">C</span><span class="option-text">Tính một nửa cự ly</span></button><button type="button" class="option-btn" data-q="27" data-letter="D" aria-label="Câu 27, phương án D: Luôn tính bằng cự ly chuẩn"><span class="letter">D</span><span class="option-text">Luôn tính bằng cự ly chuẩn</span></button></div>
+  <div class="feedback" id="feedback-27" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-27"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-28" data-q="28" aria-labelledby="question-title-28">
+  <div class="qhead"><span class="qnum">Câu 28</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-28">Cự ly chạy vũ trang dành cho nam theo điều lệ ba môn quân sự phối hợp là bao nhiêu?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="28" data-letter="A" aria-label="Câu 28, phương án A: 1500 m"><span class="letter">A</span><span class="option-text">1500 m</span></button><button type="button" class="option-btn" data-q="28" data-letter="B" aria-label="Câu 28, phương án B: 2000 m"><span class="letter">B</span><span class="option-text">2000 m</span></button><button type="button" class="option-btn" data-q="28" data-letter="C" aria-label="Câu 28, phương án C: 3000 m"><span class="letter">C</span><span class="option-text">3000 m</span></button><button type="button" class="option-btn" data-q="28" data-letter="D" aria-label="Câu 28, phương án D: 5000 m"><span class="letter">D</span><span class="option-text">5000 m</span></button></div>
+  <div class="feedback" id="feedback-28" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-28"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-29" data-q="29" aria-labelledby="question-title-29">
+  <div class="qhead"><span class="qnum">Câu 29</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-29">Cự ly chạy vũ trang dành cho nữ theo điều lệ ba môn quân sự phối hợp là bao nhiêu?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="29" data-letter="A" aria-label="Câu 29, phương án A: 800 m"><span class="letter">A</span><span class="option-text">800 m</span></button><button type="button" class="option-btn" data-q="29" data-letter="B" aria-label="Câu 29, phương án B: 1500 m"><span class="letter">B</span><span class="option-text">1500 m</span></button><button type="button" class="option-btn" data-q="29" data-letter="C" aria-label="Câu 29, phương án C: 2000 m"><span class="letter">C</span><span class="option-text">2000 m</span></button><button type="button" class="option-btn" data-q="29" data-letter="D" aria-label="Câu 29, phương án D: 3000 m"><span class="letter">D</span><span class="option-text">3000 m</span></button></div>
+  <div class="feedback" id="feedback-29" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-29"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-30" data-q="30" aria-labelledby="question-title-30">
+  <div class="qhead"><span class="qnum">Câu 30</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-30">Theo bảng điểm chạy vũ trang nam, hoàn thành trong 9 phút 58 giây được bao nhiêu điểm (mốc 10 phút = 1000 điểm, nhanh hơn mỗi giây cộng 5 điểm)?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="30" data-letter="A" aria-label="Câu 30, phương án A: 990 điểm"><span class="letter">A</span><span class="option-text">990 điểm</span></button><button type="button" class="option-btn" data-q="30" data-letter="B" aria-label="Câu 30, phương án B: 1002 điểm"><span class="letter">B</span><span class="option-text">1002 điểm</span></button><button type="button" class="option-btn" data-q="30" data-letter="C" aria-label="Câu 30, phương án C: 1005 điểm"><span class="letter">C</span><span class="option-text">1005 điểm</span></button><button type="button" class="option-btn" data-q="30" data-letter="D" aria-label="Câu 30, phương án D: 1010 điểm"><span class="letter">D</span><span class="option-text">1010 điểm</span></button></div>
+  <div class="feedback" id="feedback-30" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-30"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-31" data-q="31" aria-labelledby="question-title-31">
+  <div class="qhead"><span class="qnum">Câu 31</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-31">Theo bảng điểm chạy vũ trang nam, chạy 10 phút 03 giây được bao nhiêu điểm (mốc 10 phút = 1000 điểm, chậm hơn mỗi giây trừ 3 điểm)?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="31" data-letter="A" aria-label="Câu 31, phương án A: 991 điểm"><span class="letter">A</span><span class="option-text">991 điểm</span></button><button type="button" class="option-btn" data-q="31" data-letter="B" aria-label="Câu 31, phương án B: 994 điểm"><span class="letter">B</span><span class="option-text">994 điểm</span></button><button type="button" class="option-btn" data-q="31" data-letter="C" aria-label="Câu 31, phương án C: 997 điểm"><span class="letter">C</span><span class="option-text">997 điểm</span></button><button type="button" class="option-btn" data-q="31" data-letter="D" aria-label="Câu 31, phương án D: 1003 điểm"><span class="letter">D</span><span class="option-text">1003 điểm</span></button></div>
+  <div class="feedback" id="feedback-31" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-31"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-32" data-q="32" aria-labelledby="question-title-32">
+  <div class="qhead"><span class="qnum">Câu 32</span><span class="group-chip">Ba môn quân sự phối hợp</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-32">Vận động viên có 28 vòng bắn súng (800 điểm), ném lựu đạn được 1000 điểm và chạy được 1000 điểm. Tổng điểm toàn năng bằng bao nhiêu?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="32" data-letter="A" aria-label="Câu 32, phương án A: 2600 điểm"><span class="letter">A</span><span class="option-text">2600 điểm</span></button><button type="button" class="option-btn" data-q="32" data-letter="B" aria-label="Câu 32, phương án B: 2700 điểm"><span class="letter">B</span><span class="option-text">2700 điểm</span></button><button type="button" class="option-btn" data-q="32" data-letter="C" aria-label="Câu 32, phương án C: 2800 điểm"><span class="letter">C</span><span class="option-text">2800 điểm</span></button><button type="button" class="option-btn" data-q="32" data-letter="D" aria-label="Câu 32, phương án D: 3000 điểm"><span class="letter">D</span><span class="option-text">3000 điểm</span></button></div>
+  <div class="feedback" id="feedback-32" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-32"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-33" data-q="33" aria-labelledby="question-title-33">
+  <div class="qhead"><span class="qnum">Câu 33</span><span class="group-chip">Phòng tránh vũ khí công nghệ cao</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-33">Nội dung nào diễn đạt đúng nhất khái niệm vũ khí công nghệ cao trong bài giảng?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="33" data-letter="A" aria-label="Câu 33, phương án A: Bất cứ vũ khí nào có kích thước lớn"><span class="letter">A</span><span class="option-text">Bất cứ vũ khí nào có kích thước lớn</span></button><button type="button" class="option-btn" data-q="33" data-letter="B" aria-label="Câu 33, phương án B: Vũ khí sử dụng thành tựu khoa học công nghệ hiện đại, có tính năng kỹ chiến thuật vượt trội"><span class="letter">B</span><span class="option-text">Vũ khí sử dụng thành tựu khoa học công nghệ hiện đại, có tính năng kỹ chiến thuật vượt trội</span></button><button type="button" class="option-btn" data-q="33" data-letter="C" aria-label="Câu 33, phương án C: Vũ khí chỉ dùng cho lực lượng hải quân"><span class="letter">C</span><span class="option-text">Vũ khí chỉ dùng cho lực lượng hải quân</span></button><button type="button" class="option-btn" data-q="33" data-letter="D" aria-label="Câu 33, phương án D: Vũ khí không cần hệ thống hỗ trợ nào khác"><span class="letter">D</span><span class="option-text">Vũ khí không cần hệ thống hỗ trợ nào khác</span></button></div>
+  <div class="feedback" id="feedback-33" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-33"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-34" data-q="34" aria-labelledby="question-title-34">
+  <div class="qhead"><span class="qnum">Câu 34</span><span class="group-chip">Phòng tránh vũ khí công nghệ cao</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-34">Đặc điểm nào thường được coi là thế mạnh của vũ khí công nghệ cao?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="34" data-letter="A" aria-label="Câu 34, phương án A: Tầm tác động xa và độ chính xác cao"><span class="letter">A</span><span class="option-text">Tầm tác động xa và độ chính xác cao</span></button><button type="button" class="option-btn" data-q="34" data-letter="B" aria-label="Câu 34, phương án B: Không bị ảnh hưởng bởi môi trường"><span class="letter">B</span><span class="option-text">Không bị ảnh hưởng bởi môi trường</span></button><button type="button" class="option-btn" data-q="34" data-letter="C" aria-label="Câu 34, phương án C: Không cần dữ liệu trinh sát"><span class="letter">C</span><span class="option-text">Không cần dữ liệu trinh sát</span></button><button type="button" class="option-btn" data-q="34" data-letter="D" aria-label="Câu 34, phương án D: Chi phí sử dụng luôn thấp"><span class="letter">D</span><span class="option-text">Chi phí sử dụng luôn thấp</span></button></div>
+  <div class="feedback" id="feedback-34" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-34"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-35" data-q="35" aria-labelledby="question-title-35">
+  <div class="qhead"><span class="qnum">Câu 35</span><span class="group-chip">Phòng tránh vũ khí công nghệ cao</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-35">Điểm hạn chế nào phù hợp với nội dung bài giảng về vũ khí công nghệ cao?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="35" data-letter="A" aria-label="Câu 35, phương án A: Không liên quan đến khả năng trinh sát"><span class="letter">A</span><span class="option-text">Không liên quan đến khả năng trinh sát</span></button><button type="button" class="option-btn" data-q="35" data-letter="B" aria-label="Câu 35, phương án B: Luôn rẻ và dễ sản xuất"><span class="letter">B</span><span class="option-text">Luôn rẻ và dễ sản xuất</span></button><button type="button" class="option-btn" data-q="35" data-letter="C" aria-label="Câu 35, phương án C: Phụ thuộc dữ liệu, công nghệ và hệ thống hỗ trợ phức tạp"><span class="letter">C</span><span class="option-text">Phụ thuộc dữ liệu, công nghệ và hệ thống hỗ trợ phức tạp</span></button><button type="button" class="option-btn" data-q="35" data-letter="D" aria-label="Câu 35, phương án D: Không đòi hỏi bảo dưỡng kỹ thuật"><span class="letter">D</span><span class="option-text">Không đòi hỏi bảo dưỡng kỹ thuật</span></button></div>
+  <div class="feedback" id="feedback-35" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-35"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-36" data-q="36" aria-labelledby="question-title-36">
+  <div class="qhead"><span class="qnum">Câu 36</span><span class="group-chip">Phòng tránh vũ khí công nghệ cao</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-36">Từ đặc điểm “độ chính xác cao” của VKCNC, kết luận nào hợp lý?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="36" data-letter="A" aria-label="Câu 36, phương án A: Mọi đòn tiến công đều thành công"><span class="letter">A</span><span class="option-text">Mọi đòn tiến công đều thành công</span></button><button type="button" class="option-btn" data-q="36" data-letter="B" aria-label="Câu 36, phương án B: Không thể phát hiện mục tiêu giả"><span class="letter">B</span><span class="option-text">Không thể phát hiện mục tiêu giả</span></button><button type="button" class="option-btn" data-q="36" data-letter="C" aria-label="Câu 36, phương án C: Không cần xác định mục tiêu trước"><span class="letter">C</span><span class="option-text">Không cần xác định mục tiêu trước</span></button><button type="button" class="option-btn" data-q="36" data-letter="D" aria-label="Câu 36, phương án D: Khả năng đánh trúng cao nhưng không tuyệt đối"><span class="letter">D</span><span class="option-text">Khả năng đánh trúng cao nhưng không tuyệt đối</span></button></div>
+  <div class="feedback" id="feedback-36" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-36"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-37" data-q="37" aria-labelledby="question-title-37">
+  <div class="qhead"><span class="qnum">Câu 37</span><span class="group-chip">Phòng tránh vũ khí công nghệ cao</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-37">Biện pháp nào dưới đây thuộc nhóm phòng tránh thụ động ở mức khái quát?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="37" data-letter="A" aria-label="Câu 37, phương án A: Tổ chức đánh trả lực lượng tiến công"><span class="letter">A</span><span class="option-text">Tổ chức đánh trả lực lượng tiến công</span></button><button type="button" class="option-btn" data-q="37" data-letter="B" aria-label="Câu 37, phương án B: Ngụy trang, che giấu và phân tán để giảm thiệt hại"><span class="letter">B</span><span class="option-text">Ngụy trang, che giấu và phân tán để giảm thiệt hại</span></button><button type="button" class="option-btn" data-q="37" data-letter="C" aria-label="Câu 37, phương án C: Triển khai lực lượng chủ động đánh địch"><span class="letter">C</span><span class="option-text">Triển khai lực lượng chủ động đánh địch</span></button><button type="button" class="option-btn" data-q="37" data-letter="D" aria-label="Câu 37, phương án D: Tiến công phá hủy căn cứ đối phương"><span class="letter">D</span><span class="option-text">Tiến công phá hủy căn cứ đối phương</span></button></div>
+  <div class="feedback" id="feedback-37" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-37"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-38" data-q="38" aria-labelledby="question-title-38">
+  <div class="qhead"><span class="qnum">Câu 38</span><span class="group-chip">Phòng tránh vũ khí công nghệ cao</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-38">Hoạt động cảnh giới, chủ động phát hiện nguy cơ tiến công được xếp gần nhất vào nhóm nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="38" data-letter="A" aria-label="Câu 38, phương án A: Phòng tránh chủ động"><span class="letter">A</span><span class="option-text">Phòng tránh chủ động</span></button><button type="button" class="option-btn" data-q="38" data-letter="B" aria-label="Câu 38, phương án B: Phòng tránh thụ động"><span class="letter">B</span><span class="option-text">Phòng tránh thụ động</span></button><button type="button" class="option-btn" data-q="38" data-letter="C" aria-label="Câu 38, phương án C: Hoàn toàn không liên quan phòng tránh"><span class="letter">C</span><span class="option-text">Hoàn toàn không liên quan phòng tránh</span></button><button type="button" class="option-btn" data-q="38" data-letter="D" aria-label="Câu 38, phương án D: Chỉ thuộc công tác bản đồ"><span class="letter">D</span><span class="option-text">Chỉ thuộc công tác bản đồ</span></button></div>
+  <div class="feedback" id="feedback-38" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-38"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-39" data-q="39" aria-labelledby="question-title-39">
+  <div class="qhead"><span class="qnum">Câu 39</span><span class="group-chip">Phòng tránh vũ khí công nghệ cao</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-39">Mục tiêu chính của việc bố trí nơi trú ẩn và sơ tán khi có cảnh báo là gì?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="39" data-letter="A" aria-label="Câu 39, phương án A: Làm thay đổi cấu tạo của vũ khí"><span class="letter">A</span><span class="option-text">Làm thay đổi cấu tạo của vũ khí</span></button><button type="button" class="option-btn" data-q="39" data-letter="B" aria-label="Câu 39, phương án B: Tăng thời gian phát động tiến công"><span class="letter">B</span><span class="option-text">Tăng thời gian phát động tiến công</span></button><button type="button" class="option-btn" data-q="39" data-letter="C" aria-label="Câu 39, phương án C: Giảm thương vong và thiệt hại"><span class="letter">C</span><span class="option-text">Giảm thương vong và thiệt hại</span></button><button type="button" class="option-btn" data-q="39" data-letter="D" aria-label="Câu 39, phương án D: Thay thế hoàn toàn hoạt động cảnh báo"><span class="letter">D</span><span class="option-text">Thay thế hoàn toàn hoạt động cảnh báo</span></button></div>
+  <div class="feedback" id="feedback-39" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-39"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-40" data-q="40" aria-labelledby="question-title-40">
+  <div class="qhead"><span class="qnum">Câu 40</span><span class="group-chip">Phòng tránh vũ khí công nghệ cao</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-40">Trong phân loại biện pháp phòng tránh VKCNC, nhận định nào đúng?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="40" data-letter="A" aria-label="Câu 40, phương án A: Chủ động và thụ động là hai tên gọi đồng nghĩa"><span class="letter">A</span><span class="option-text">Chủ động và thụ động là hai tên gọi đồng nghĩa</span></button><button type="button" class="option-btn" data-q="40" data-letter="B" aria-label="Câu 40, phương án B: Thụ động luôn đòi hỏi đánh trả trực tiếp"><span class="letter">B</span><span class="option-text">Thụ động luôn đòi hỏi đánh trả trực tiếp</span></button><button type="button" class="option-btn" data-q="40" data-letter="C" aria-label="Câu 40, phương án C: Chỉ có biện pháp chủ động mới giảm thiệt hại"><span class="letter">C</span><span class="option-text">Chỉ có biện pháp chủ động mới giảm thiệt hại</span></button><button type="button" class="option-btn" data-q="40" data-letter="D" aria-label="Câu 40, phương án D: Hai nhóm biện pháp có mục đích và cách thực hiện khác nhau, có thể hỗ trợ nhau"><span class="letter">D</span><span class="option-text">Hai nhóm biện pháp có mục đích và cách thực hiện khác nhau, có thể hỗ trợ nhau</span></button></div>
+  <div class="feedback" id="feedback-40" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-40"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-41" data-q="41" aria-labelledby="question-title-41">
+  <div class="qhead"><span class="qnum">Câu 41</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-41">Theo bài giảng, bản đồ địa hình là gì?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="41" data-letter="A" aria-label="Câu 41, phương án A: Ảnh chụp trực tiếp không cần hiệu chỉnh"><span class="letter">A</span><span class="option-text">Ảnh chụp trực tiếp không cần hiệu chỉnh</span></button><button type="button" class="option-btn" data-q="41" data-letter="B" aria-label="Câu 41, phương án B: Hình vẽ thu nhỏ bề mặt Trái Đất trên mặt phẳng theo những quy tắc toán học"><span class="letter">B</span><span class="option-text">Hình vẽ thu nhỏ bề mặt Trái Đất trên mặt phẳng theo những quy tắc toán học</span></button><button type="button" class="option-btn" data-q="41" data-letter="C" aria-label="Câu 41, phương án C: Một bảng liệt kê tên địa danh"><span class="letter">C</span><span class="option-text">Một bảng liệt kê tên địa danh</span></button><button type="button" class="option-btn" data-q="41" data-letter="D" aria-label="Câu 41, phương án D: Bản ghi âm mô tả địa hình"><span class="letter">D</span><span class="option-text">Bản ghi âm mô tả địa hình</span></button></div>
+  <div class="feedback" id="feedback-41" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-41"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-42" data-q="42" aria-labelledby="question-title-42">
+  <div class="qhead"><span class="qnum">Câu 42</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-42">Trên bản đồ tỷ lệ 1:50.000, đoạn thẳng 1 cm tương ứng cự ly bằng phẳng ngoài thực địa là bao nhiêu?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="42" data-letter="A" aria-label="Câu 42, phương án A: 50 m"><span class="letter">A</span><span class="option-text">50 m</span></button><button type="button" class="option-btn" data-q="42" data-letter="B" aria-label="Câu 42, phương án B: 100 m"><span class="letter">B</span><span class="option-text">100 m</span></button><button type="button" class="option-btn" data-q="42" data-letter="C" aria-label="Câu 42, phương án C: 500 m"><span class="letter">C</span><span class="option-text">500 m</span></button><button type="button" class="option-btn" data-q="42" data-letter="D" aria-label="Câu 42, phương án D: 5 km"><span class="letter">D</span><span class="option-text">5 km</span></button></div>
+  <div class="feedback" id="feedback-42" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-42"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-43" data-q="43" aria-labelledby="question-title-43">
+  <div class="qhead"><span class="qnum">Câu 43</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-43">Đo trên bản đồ tỷ lệ 1:50.000 được 3 cm. Cự ly bằng phẳng tương ứng ngoài thực địa là bao nhiêu?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="43" data-letter="A" aria-label="Câu 43, phương án A: 1,5 km"><span class="letter">A</span><span class="option-text">1,5 km</span></button><button type="button" class="option-btn" data-q="43" data-letter="B" aria-label="Câu 43, phương án B: 0,6 km"><span class="letter">B</span><span class="option-text">0,6 km</span></button><button type="button" class="option-btn" data-q="43" data-letter="C" aria-label="Câu 43, phương án C: 3 km"><span class="letter">C</span><span class="option-text">3 km</span></button><button type="button" class="option-btn" data-q="43" data-letter="D" aria-label="Câu 43, phương án D: 15 km"><span class="letter">D</span><span class="option-text">15 km</span></button></div>
+  <div class="feedback" id="feedback-43" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-43"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-44" data-q="44" aria-labelledby="question-title-44">
+  <div class="qhead"><span class="qnum">Câu 44</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-44">Trên bản đồ tỷ lệ 1:25.000, đoạn dài 4 cm tương ứng bao nhiêu ngoài thực địa (đo khoảng cách bằng phẳng)?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="44" data-letter="A" aria-label="Câu 44, phương án A: 250 m"><span class="letter">A</span><span class="option-text">250 m</span></button><button type="button" class="option-btn" data-q="44" data-letter="B" aria-label="Câu 44, phương án B: 500 m"><span class="letter">B</span><span class="option-text">500 m</span></button><button type="button" class="option-btn" data-q="44" data-letter="C" aria-label="Câu 44, phương án C: 750 m"><span class="letter">C</span><span class="option-text">750 m</span></button><button type="button" class="option-btn" data-q="44" data-letter="D" aria-label="Câu 44, phương án D: 1 km"><span class="letter">D</span><span class="option-text">1 km</span></button></div>
+  <div class="feedback" id="feedback-44" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-44"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-45" data-q="45" aria-labelledby="question-title-45">
+  <div class="qhead"><span class="qnum">Câu 45</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-45">Một hình chữ nhật đo trên bản đồ tỷ lệ 1:50.000 có kích thước 2 cm × 3 cm. Diện tích bằng phẳng tương ứng ngoài thực địa là bao nhiêu?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="45" data-letter="A" aria-label="Câu 45, phương án A: 0,15 km²"><span class="letter">A</span><span class="option-text">0,15 km²</span></button><button type="button" class="option-btn" data-q="45" data-letter="B" aria-label="Câu 45, phương án B: 1,5 km²"><span class="letter">B</span><span class="option-text">1,5 km²</span></button><button type="button" class="option-btn" data-q="45" data-letter="C" aria-label="Câu 45, phương án C: 15 km²"><span class="letter">C</span><span class="option-text">15 km²</span></button><button type="button" class="option-btn" data-q="45" data-letter="D" aria-label="Câu 45, phương án D: 150 km²"><span class="letter">D</span><span class="option-text">150 km²</span></button></div>
+  <div class="feedback" id="feedback-45" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-45"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-46" data-q="46" aria-labelledby="question-title-46">
+  <div class="qhead"><span class="qnum">Câu 46</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-46">Trên bản đồ tỷ lệ 1:100.000, một hình vuông có diện tích 1 cm² tương ứng diện tích mặt phẳng ngoài thực địa bao nhiêu?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="46" data-letter="A" aria-label="Câu 46, phương án A: 0,01 km²"><span class="letter">A</span><span class="option-text">0,01 km²</span></button><button type="button" class="option-btn" data-q="46" data-letter="B" aria-label="Câu 46, phương án B: 0,1 km²"><span class="letter">B</span><span class="option-text">0,1 km²</span></button><button type="button" class="option-btn" data-q="46" data-letter="C" aria-label="Câu 46, phương án C: 1 km²"><span class="letter">C</span><span class="option-text">1 km²</span></button><button type="button" class="option-btn" data-q="46" data-letter="D" aria-label="Câu 46, phương án D: 10 km²"><span class="letter">D</span><span class="option-text">10 km²</span></button></div>
+  <div class="feedback" id="feedback-46" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-46"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-47" data-q="47" aria-labelledby="question-title-47">
+  <div class="qhead"><span class="qnum">Câu 47</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-47">Đường bình độ trên bản đồ địa hình là đường nối những điểm có đặc trưng nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="47" data-letter="A" aria-label="Câu 47, phương án A: Cùng độ cao theo mốc cao độ"><span class="letter">A</span><span class="option-text">Cùng độ cao theo mốc cao độ</span></button><button type="button" class="option-btn" data-q="47" data-letter="B" aria-label="Câu 47, phương án B: Cùng khoảng cách đến trung tâm bản đồ"><span class="letter">B</span><span class="option-text">Cùng khoảng cách đến trung tâm bản đồ</span></button><button type="button" class="option-btn" data-q="47" data-letter="C" aria-label="Câu 47, phương án C: Cùng tên địa danh"><span class="letter">C</span><span class="option-text">Cùng tên địa danh</span></button><button type="button" class="option-btn" data-q="47" data-letter="D" aria-label="Câu 47, phương án D: Cùng độ dốc sườn núi"><span class="letter">D</span><span class="option-text">Cùng độ dốc sườn núi</span></button></div>
+  <div class="feedback" id="feedback-47" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-47"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-48" data-q="48" aria-labelledby="question-title-48">
+  <div class="qhead"><span class="qnum">Câu 48</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-48">Trên cùng một bản đồ có khoảng cao đều thống nhất, khu vực các đường bình độ nằm sát nhau thường biểu thị điều gì?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="48" data-letter="A" aria-label="Câu 48, phương án A: Địa hình bằng phẳng"><span class="letter">A</span><span class="option-text">Địa hình bằng phẳng</span></button><button type="button" class="option-btn" data-q="48" data-letter="B" aria-label="Câu 48, phương án B: Địa hình luôn ở cao độ 0 m"><span class="letter">B</span><span class="option-text">Địa hình luôn ở cao độ 0 m</span></button><button type="button" class="option-btn" data-q="48" data-letter="C" aria-label="Câu 48, phương án C: Sườn thoải"><span class="letter">C</span><span class="option-text">Sườn thoải</span></button><button type="button" class="option-btn" data-q="48" data-letter="D" aria-label="Câu 48, phương án D: Sườn dốc"><span class="letter">D</span><span class="option-text">Sườn dốc</span></button></div>
+  <div class="feedback" id="feedback-48" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-48"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-49" data-q="49" aria-labelledby="question-title-49">
+  <div class="qhead"><span class="qnum">Câu 49</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-49">Đường bình độ cái thường được thể hiện trên bản đồ như thế nào?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="49" data-letter="A" aria-label="Câu 49, phương án A: Chỉ bằng nét đứt đỏ"><span class="letter">A</span><span class="option-text">Chỉ bằng nét đứt đỏ</span></button><button type="button" class="option-btn" data-q="49" data-letter="B" aria-label="Câu 49, phương án B: Bằng nét đậm hơn các đường bình độ cơ bản"><span class="letter">B</span><span class="option-text">Bằng nét đậm hơn các đường bình độ cơ bản</span></button><button type="button" class="option-btn" data-q="49" data-letter="C" aria-label="Câu 49, phương án C: Bằng ký hiệu hình sao"><span class="letter">C</span><span class="option-text">Bằng ký hiệu hình sao</span></button><button type="button" class="option-btn" data-q="49" data-letter="D" aria-label="Câu 49, phương án D: Chỉ xuất hiện ở vùng mặt nước"><span class="letter">D</span><span class="option-text">Chỉ xuất hiện ở vùng mặt nước</span></button></div>
+  <div class="feedback" id="feedback-49" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-49"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section>
+<section class="question-card" id="card-50" data-q="50" aria-labelledby="question-title-50">
+  <div class="qhead"><span class="qnum">Câu 50</span><span class="group-chip">Bản đồ địa hình quân sự</span><span class="status-dot" aria-hidden="true"></span></div>
+  <div class="qtext" id="question-title-50">Trong hai bản đồ cùng kích thước tờ và cùng loại, tỷ lệ nào thường thể hiện địa hình chi tiết hơn?</div>
+  <div class="options"><button type="button" class="option-btn" data-q="50" data-letter="A" aria-label="Câu 50, phương án A: 1:1.000.000"><span class="letter">A</span><span class="option-text">1:1.000.000</span></button><button type="button" class="option-btn" data-q="50" data-letter="B" aria-label="Câu 50, phương án B: 1:500.000"><span class="letter">B</span><span class="option-text">1:500.000</span></button><button type="button" class="option-btn" data-q="50" data-letter="C" aria-label="Câu 50, phương án C: 1:25.000"><span class="letter">C</span><span class="option-text">1:25.000</span></button><button type="button" class="option-btn" data-q="50" data-letter="D" aria-label="Câu 50, phương án D: 1:200.000"><span class="letter">D</span><span class="option-text">1:200.000</span></button></div>
+  <div class="feedback" id="feedback-50" role="status" aria-live="polite"></div>
+  <div class="answer-detail" id="detail-50"><div class="detail-label">Giải thích</div><div class="detail-body"></div><div class="source"></div></div>
+</section></div>
+</main>
+<footer class="bottom"><div class="bottom-inner">
+  <div class="count" id="count">Vòng 1 · Đã trả lời 0/50</div>
+  <div class="actions">
+    <button type="button" class="action jump" id="nextUnanswered">Câu chưa làm tiếp</button>
+    <button type="button" class="action reset" id="reset">Làm lại từ đầu</button>
+    <button type="button" class="action summary-btn" id="summaryBtn">Xem tổng kết</button>
+  </div>
+</div></footer>
+<script>
+
+'use strict';
+const BANK={"title":"Ngân hàng trắc nghiệm MIL1230","groups":{"1":"Chế độ sinh hoạt, học tập và công tác","2":"Tổ chức quân đội - quân chủng, binh chủng","3":"Ba môn quân sự phối hợp","4":"Phòng tránh vũ khí công nghệ cao","5":"Bản đồ địa hình quân sự"},"questions":[{"n":1,"group":1,"question":"Theo thứ tự 11 chế độ trong ngày, chế độ số 2 là gì?","options":{"A":"Kiểm tra sáng","B":"Thức dậy","C":"Thể dục buổi sáng","D":"Treo quốc kỳ"},"key":"B","explanation":"Chế độ 1 là treo quốc kỳ, 2 là thức dậy, 3 là thể dục buổi sáng, 4 là kiểm tra sáng.","origin":"Bài giảng tr. 10"},{"n":2,"group":1,"question":"Theo danh sách chế độ ngày trong bài giảng, chế độ số 3 là gì?","options":{"A":"Thể dục buổi sáng","B":"Kiểm tra sáng","C":"Học tập","D":"Ăn uống"},"key":"A","explanation":"Chế độ số 3 là thể dục buổi sáng, diễn ra sau thức dậy và trước kiểm tra sáng.","origin":"Bài giảng tr. 10"},{"n":3,"group":1,"question":"Chế độ số 7 trong ngày của quân đội là nội dung nào?","options":{"A":"Đọc báo, nghe tin","B":"Học tập","C":"Lau vũ khí, khí tài, trang bị","D":"Thể thao, tăng gia sản xuất"},"key":"C","explanation":"Chế độ 7 là lau vũ khí, khí tài, trang bị; mục đích bao gồm bảo quản và duy trì trạng thái trang bị.","origin":"Bài giảng tr. 10"},{"n":4,"group":1,"question":"Chế độ số 10 theo danh sách 11 chế độ trong ngày là gì?","options":{"A":"Ngủ nghỉ","B":"Đọc báo, nghe tin","C":"Kiểm tra sáng","D":"Điểm danh, điểm quân số"},"key":"D","explanation":"Điểm danh, điểm quân số ở vị trí số 10; ngủ nghỉ là chế độ 11.","origin":"Bài giảng tr. 10"},{"n":5,"group":1,"question":"Chế độ nào đứng ngay trước “Điểm danh, điểm quân số” trong thứ tự 11 chế độ?","options":{"A":"Thể thao, tăng gia sản xuất","B":"Đọc báo, nghe tin","C":"Lau vũ khí, khí tài, trang bị","D":"Ngủ nghỉ"},"key":"B","explanation":"Đọc báo, nghe tin là chế độ số 9, ngay trước chế độ 10.","origin":"Bài giảng tr. 10"},{"n":6,"group":1,"question":"Bộ ba nào là ba chế độ trong tuần theo bài giảng?","options":{"A":"Chào cờ, duyệt đội ngũ; Thông báo chính trị; Tổng vệ sinh doanh trại","B":"Treo quốc kỳ; Học tập; Ngủ nghỉ","C":"Điểm danh; Đọc báo, nghe tin; Ăn uống","D":"Thể dục sáng; Lau vũ khí; Kiểm tra sáng"},"key":"A","explanation":"Ba chế độ tuần là chào cờ, duyệt đội ngũ; thông báo chính trị; tổng vệ sinh doanh trại. Các lựa chọn khác trộn chế độ trong ngày.","origin":"Bài giảng tr. 10"},{"n":7,"group":1,"question":"Theo lịch chia mùa được bổ sung từ tài liệu tham khảo, khoảng thời gian nào là mùa nóng?","options":{"A":"01/01 đến 31/03","B":"01/04 đến 31/10","C":"01/06 đến 31/08","D":"01/11 đến 31/03"},"key":"B","explanation":"Lịch mùa nóng tham khảo: 01/04-31/10; mùa lạnh: 01/11-31/03. Giờ biểu cụ thể tùy quy định đơn vị.","origin":"Tài liệu bổ sung; bài giảng tr. 10 thiếu chi tiết"},{"n":8,"group":1,"question":"Theo lịch chia mùa được bổ sung từ tài liệu tham khảo, mùa lạnh bắt đầu ngày nào?","options":{"A":"01/09","B":"01/10","C":"01/11","D":"01/12"},"key":"C","explanation":"Mùa lạnh bắt đầu 01/11 và kéo dài đến hết 31/03 năm sau trong lịch tham khảo.","origin":"Tài liệu bổ sung; bài giảng tr. 10"},{"n":9,"group":1,"question":"Mục đích phù hợp nhất của “Điểm danh, điểm quân số” là gì?","options":{"A":"Kiểm tra tình hình quân số và quản lý đơn vị","B":"Thay thế hoàn toàn kiểm tra sáng","C":"Đánh giá kết quả bắn súng của từng chiến sĩ","D":"Thay cho công tác lau vũ khí"},"key":"A","explanation":"Điểm danh và điểm quân số nhằm nắm, quản lý quân số; không thay thế các chế độ khác.","origin":"Bài giảng tr. 10 + bổ sung"},{"n":10,"group":1,"question":"Trong thứ tự 11 chế độ trong ngày, “Kiểm tra sáng” nằm ở vị trí nào?","options":{"A":"Số 2","B":"Số 3","C":"Số 4","D":"Số 5"},"key":"C","explanation":"Kiểm tra sáng là chế độ số 4, sau thể dục buổi sáng và trước học tập.","origin":"Bài giảng tr. 10"},{"n":11,"group":2,"question":"Dãy nào liệt kê đúng bảy quân khu được ghi trong bài giảng?","options":{"A":"1, 2, 3, 4, 5, 6, 7","B":"1, 2, 3, 4, 5, 7, 9","C":"1, 2, 3, 5, 6, 8, 9","D":"1, 2, 4, 5, 6, 7, 9"},"key":"B","explanation":"Bảy quân khu được ghi: 1, 2, 3, 4, 5, 7, 9.","origin":"Bài giảng tr. 13"},{"n":12,"group":2,"question":"Theo phân biệt trong giáo trình, “quân khu” chủ yếu được hiểu là gì?","options":{"A":"Một binh chủng bảo đảm kỹ thuật","B":"Một quân chủng chuyên về tác chiến trên biển","C":"Một tổ chức quân sự theo địa bàn lãnh thổ","D":"Một trung đội trực thuộc tiểu đoàn"},"key":"C","explanation":"Quân khu là tổ chức quân sự được xác lập theo địa bàn, khác với quân chủng và binh chủng phân theo loại lực lượng/nhiệm vụ.","origin":"Bài giảng tr. 11-13 + bổ sung"},{"n":13,"group":2,"question":"Theo cách gọi của đề cương về hai Bộ tư lệnh mang tên quân chủng, cặp nào đúng?","options":{"A":"Hải quân và Phòng không - Không quân","B":"Lục quân và Công binh","C":"Hải quân và Tăng - Thiết giáp","D":"Phòng không - Không quân và Thông tin liên lạc"},"key":"A","explanation":"Đề cương tập trung hai Bộ tư lệnh quân chủng Hải quân và Phòng không - Không quân; cách phân loại tính cả Lục quân có thể nêu 3 quân chủng.","origin":"Đề cương tr. 37; bài giảng tr. 18-19"},{"n":14,"group":2,"question":"Binh chủng nào đảm nhiệm bảo đảm thông tin liên lạc phục vụ chỉ huy?","options":{"A":"Hóa học","B":"Thông tin liên lạc","C":"Công binh","D":"Đặc công"},"key":"B","explanation":"Binh chủng Thông tin liên lạc bảo đảm thông tin, duy trì liên lạc phục vụ chỉ huy và phối hợp.","origin":"Bài giảng tr. 16-17 + bổ sung"},{"n":15,"group":2,"question":"Nhiệm vụ bảo đảm cơ động, vượt vật cản và xây dựng công trình quân sự phù hợp nhất với binh chủng nào?","options":{"A":"Công binh","B":"Pháo binh","C":"Thông tin liên lạc","D":"Hóa học"},"key":"A","explanation":"Công binh thực hiện nhiệm vụ bảo đảm công binh, cơ động, công trình và vượt vật cản.","origin":"Bài giảng tr. 16 + bổ sung"},{"n":16,"group":2,"question":"Binh chủng nào gắn trực tiếp với nhiệm vụ phòng hóa và khắc phục hậu quả tác nhân hóa học?","options":{"A":"Pháo binh","B":"Đặc công","C":"Hóa học","D":"Tăng - Thiết giáp"},"key":"C","explanation":"Binh chủng Hóa học đảm nhận nhiệm vụ phòng hóa và các nhiệm vụ chuyên môn liên quan tác nhân hóa học.","origin":"Bài giảng tr. 17 + bổ sung"},{"n":17,"group":2,"question":"Lực lượng sử dụng xe tăng, xe thiết giáp để cơ động và tác chiến trên bộ thuộc binh chủng nào?","options":{"A":"Pháo binh","B":"Tăng - Thiết giáp","C":"Công binh","D":"Thông tin liên lạc"},"key":"B","explanation":"Đây là đặc trưng của binh chủng Tăng - Thiết giáp.","origin":"Bài giảng tr. 14 + bổ sung"},{"n":18,"group":2,"question":"Trong sáu binh chủng truyền thống của đề cương, đơn vị nào có chức năng chi viện hỏa lực đặc trưng?","options":{"A":"Công binh","B":"Thông tin liên lạc","C":"Hóa học","D":"Pháo binh"},"key":"D","explanation":"Pháo binh là binh chủng gắn với chi viện hỏa lực.","origin":"Bài giảng tr. 14 + bổ sung"},{"n":19,"group":2,"question":"Quân đoàn 12 được thành lập từ các đơn vị tiền thân nào?","options":{"A":"Quân đoàn 1 và Quân đoàn 2","B":"Quân đoàn 2 và Quân đoàn 3","C":"Quân đoàn 3 và Quân đoàn 4","D":"Quân đoàn 1 và Quân đoàn 4"},"key":"A","explanation":"Thông tin Chính phủ nêu Quân đoàn 12 kế thừa các đơn vị tiền thân Quân đoàn 1 và Quân đoàn 2, công bố thành lập năm 2023.","origin":"Bổ sung: Cổng TTĐT Chính phủ, 02/12/2023"},{"n":20,"group":2,"question":"Theo đợt sắp xếp tổ chức năm 2024, Quân đoàn 34 được thành lập trên cơ sở nào?","options":{"A":"Quân đoàn 1 và 2","B":"Quân đoàn 1 và 3","C":"Quân đoàn 2 và 4","D":"Quân đoàn 3 và 4"},"key":"D","explanation":"Quân đoàn 34 được thành lập trên cơ sở Quân đoàn 3 và Quân đoàn 4.","origin":"Bổ sung: Cổng TTĐT Chính phủ, 2024"},{"n":21,"group":3,"question":"“Ba môn quân sự phối hợp” theo bài giảng bao gồm những môn nào?","options":{"A":"Bắn súng, điều lệnh đội ngũ, chạy bền","B":"Bắn súng quân dụng, ném lựu đạn xa đúng hướng, chạy vũ trang","C":"Võ thuật, bắn súng, bơi vũ trang","D":"Ném lựu đạn, vượt vật cản, điều lệnh"},"key":"B","explanation":"Ba môn là bắn súng quân dụng, ném lựu đạn xa đúng hướng và chạy vũ trang.","origin":"Bài giảng tr. 20-23"},{"n":22,"group":3,"question":"Theo điều kiện thi bắn trong tài liệu tham khảo, cự ly bắn súng AK/CKC là bao nhiêu?","options":{"A":"50 m","B":"75 m","C":"100 m","D":"150 m"},"key":"C","explanation":"Nội dung bắn dùng cự ly 100 m theo điều lệ được tham khảo.","origin":"Bài giảng tr. 21 + bổ sung"},{"n":23,"group":3,"question":"Trong phần bắn súng tính điểm của ba môn quân sự phối hợp, vận động viên bắn bao nhiêu viên đạn tính điểm?","options":{"A":"2 viên","B":"3 viên","C":"4 viên","D":"5 viên"},"key":"B","explanation":"Ba viên đạn được tính điểm; tổng số vòng trên bia dùng để tra bảng quy đổi điểm xếp hạng.","origin":"Bài giảng tr. 21 + bổ sung"},{"n":24,"group":3,"question":"Theo bảng quy đổi môn bắn súng trong tài liệu tham khảo, đạt 30 vòng trên bia tương ứng bao nhiêu điểm xếp hạng?","options":{"A":"800 điểm","B":"900 điểm","C":"1000 điểm","D":"1200 điểm"},"key":"C","explanation":"30 vòng trên bia tương ứng 1000 điểm xếp hạng, không phải 30 điểm.","origin":"Bài giảng tr. 22 + bảng tham khảo"},{"n":25,"group":3,"question":"Theo bảng quy đổi môn bắn súng, tổng 27 vòng trên bia tương ứng mức nào?","options":{"A":"630 điểm","B":"710 điểm","C":"800 điểm","D":"900 điểm"},"key":"B","explanation":"27 vòng được 710 điểm; 26 vòng 630, 28 vòng 800, 29 vòng 900.","origin":"Bài giảng tr. 22 + bảng tham khảo"},{"n":26,"group":3,"question":"Theo điều lệ tham khảo, ở môn ném lựu đạn, thành tích chính thức được tính theo cách nào?","options":{"A":"Cộng cả ba lần ném không kể hợp lệ","B":"Lấy trung bình các lần ném","C":"Lấy lần ném hợp lệ ngắn nhất","D":"Lấy lần ném hợp lệ xa nhất"},"key":"D","explanation":"Thành tích được tính theo quả ném hợp lệ xa nhất trong các lần ném tính thành tích.","origin":"Bài giảng tr. 21-23 + bổ sung"},{"n":27,"group":3,"question":"Một quả lựu đạn rơi ngoài hành lang ném quy định. Theo nguyên tắc điều lệ, xử lý thành tích lần ném đó thế nào?","options":{"A":"Không tính thành tích lần ném đó","B":"Vẫn tính đủ cự ly ném được","C":"Tính một nửa cự ly","D":"Luôn tính bằng cự ly chuẩn"},"key":"A","explanation":"Lựu đạn rơi ngoài hành lang quy định là lần ném không hợp lệ, nên không tính thành tích lần đó.","origin":"Bài giảng tr. 22 + bổ sung"},{"n":28,"group":3,"question":"Cự ly chạy vũ trang dành cho nam theo điều lệ ba môn quân sự phối hợp là bao nhiêu?","options":{"A":"1500 m","B":"2000 m","C":"3000 m","D":"5000 m"},"key":"C","explanation":"Theo bảng điều lệ, nam chạy 3000 m; nữ chạy 1500 m.","origin":"Bài giảng tr. 23 + bổ sung"},{"n":29,"group":3,"question":"Cự ly chạy vũ trang dành cho nữ theo điều lệ ba môn quân sự phối hợp là bao nhiêu?","options":{"A":"800 m","B":"1500 m","C":"2000 m","D":"3000 m"},"key":"B","explanation":"Theo điều lệ tham khảo, nữ chạy 1500 m.","origin":"Bài giảng tr. 23 + bổ sung"},{"n":30,"group":3,"question":"Theo bảng điểm chạy vũ trang nam, hoàn thành trong 9 phút 58 giây được bao nhiêu điểm (mốc 10 phút = 1000 điểm, nhanh hơn mỗi giây cộng 5 điểm)?","options":{"A":"990 điểm","B":"1002 điểm","C":"1005 điểm","D":"1010 điểm"},"key":"D","explanation":"9:58 nhanh hơn mốc 10:00 là 2 giây, cộng 2 × 5 = 10 điểm; tổng 1010.","origin":"Bài giảng tr. 23 + bổ sung"},{"n":31,"group":3,"question":"Theo bảng điểm chạy vũ trang nam, chạy 10 phút 03 giây được bao nhiêu điểm (mốc 10 phút = 1000 điểm, chậm hơn mỗi giây trừ 3 điểm)?","options":{"A":"991 điểm","B":"994 điểm","C":"997 điểm","D":"1003 điểm"},"key":"A","explanation":"Chậm hơn 3 giây, trừ 3 × 3 = 9 điểm; tổng 991.","origin":"Bài giảng tr. 23 + bổ sung"},{"n":32,"group":3,"question":"Vận động viên có 28 vòng bắn súng (800 điểm), ném lựu đạn được 1000 điểm và chạy được 1000 điểm. Tổng điểm toàn năng bằng bao nhiêu?","options":{"A":"2600 điểm","B":"2700 điểm","C":"2800 điểm","D":"3000 điểm"},"key":"C","explanation":"Điểm toàn năng bằng tổng ba môn: 800 + 1000 + 1000 = 2800 điểm.","origin":"Bài giảng tr. 20-23 + bảng điểm bổ sung"},{"n":33,"group":4,"question":"Nội dung nào diễn đạt đúng nhất khái niệm vũ khí công nghệ cao trong bài giảng?","options":{"A":"Bất cứ vũ khí nào có kích thước lớn","B":"Vũ khí sử dụng thành tựu khoa học công nghệ hiện đại, có tính năng kỹ chiến thuật vượt trội","C":"Vũ khí chỉ dùng cho lực lượng hải quân","D":"Vũ khí không cần hệ thống hỗ trợ nào khác"},"key":"B","explanation":"Đặc trưng là ứng dụng thành tựu khoa học công nghệ hiện đại, tạo bước tiến đáng kể về tính năng chiến thuật - kỹ thuật.","origin":"Bài giảng tr. 28-29"},{"n":34,"group":4,"question":"Đặc điểm nào thường được coi là thế mạnh của vũ khí công nghệ cao?","options":{"A":"Tầm tác động xa và độ chính xác cao","B":"Không bị ảnh hưởng bởi môi trường","C":"Không cần dữ liệu trinh sát","D":"Chi phí sử dụng luôn thấp"},"key":"A","explanation":"Các ưu điểm thường nêu gồm tầm xa, độ chính xác/uy lực cao; các khẳng định tuyệt đối còn lại không đúng.","origin":"Bài giảng tr. 29"},{"n":35,"group":4,"question":"Điểm hạn chế nào phù hợp với nội dung bài giảng về vũ khí công nghệ cao?","options":{"A":"Không liên quan đến khả năng trinh sát","B":"Luôn rẻ và dễ sản xuất","C":"Phụ thuộc dữ liệu, công nghệ và hệ thống hỗ trợ phức tạp","D":"Không đòi hỏi bảo dưỡng kỹ thuật"},"key":"C","explanation":"Nhược điểm là sự phụ thuộc hệ thống trinh sát, xử lý dữ liệu, chi phí và trình độ kỹ thuật.","origin":"Bài giảng tr. 29-30"},{"n":36,"group":4,"question":"Từ đặc điểm “độ chính xác cao” của VKCNC, kết luận nào hợp lý?","options":{"A":"Mọi đòn tiến công đều thành công","B":"Không thể phát hiện mục tiêu giả","C":"Không cần xác định mục tiêu trước","D":"Khả năng đánh trúng cao nhưng không tuyệt đối"},"key":"D","explanation":"Độ chính xác cao không đồng nghĩa chắc chắn trúng; vẫn phụ thuộc trinh sát, điều kiện môi trường và hệ thống.","origin":"Bài giảng tr. 29-30"},{"n":37,"group":4,"question":"Biện pháp nào dưới đây thuộc nhóm phòng tránh thụ động ở mức khái quát?","options":{"A":"Tổ chức đánh trả lực lượng tiến công","B":"Ngụy trang, che giấu và phân tán để giảm thiệt hại","C":"Triển khai lực lượng chủ động đánh địch","D":"Tiến công phá hủy căn cứ đối phương"},"key":"B","explanation":"Ngụy trang, che giấu và phân tán giúp giảm bị phát hiện/thiệt hại, thuộc biện pháp phòng tránh thụ động.","origin":"Bài giảng tr. 30-32"},{"n":38,"group":4,"question":"Hoạt động cảnh giới, chủ động phát hiện nguy cơ tiến công được xếp gần nhất vào nhóm nào?","options":{"A":"Phòng tránh chủ động","B":"Phòng tránh thụ động","C":"Hoàn toàn không liên quan phòng tránh","D":"Chỉ thuộc công tác bản đồ"},"key":"A","explanation":"Chủ động cảnh giới, phát hiện và chuẩn bị đối phó là nội dung của phòng tránh chủ động theo cách phân nhóm trong tài liệu bổ sung.","origin":"Bài giảng tr. 30-32 + bổ sung"},{"n":39,"group":4,"question":"Mục tiêu chính của việc bố trí nơi trú ẩn và sơ tán khi có cảnh báo là gì?","options":{"A":"Làm thay đổi cấu tạo của vũ khí","B":"Tăng thời gian phát động tiến công","C":"Giảm thương vong và thiệt hại","D":"Thay thế hoàn toàn hoạt động cảnh báo"},"key":"C","explanation":"Nơi trú ẩn và sơ tán là biện pháp bảo vệ, giảm tác động đến người và tài sản.","origin":"Bài giảng tr. 31-32 + bổ sung"},{"n":40,"group":4,"question":"Trong phân loại biện pháp phòng tránh VKCNC, nhận định nào đúng?","options":{"A":"Chủ động và thụ động là hai tên gọi đồng nghĩa","B":"Thụ động luôn đòi hỏi đánh trả trực tiếp","C":"Chỉ có biện pháp chủ động mới giảm thiệt hại","D":"Hai nhóm biện pháp có mục đích và cách thực hiện khác nhau, có thể hỗ trợ nhau"},"key":"D","explanation":"Chủ động thiên về phát hiện, tổ chức đối phó; thụ động thiên về che giấu, giảm phát hiện và giảm thiệt hại.","origin":"Bài giảng tr. 30-32 + bổ sung"},{"n":41,"group":5,"question":"Theo bài giảng, bản đồ địa hình là gì?","options":{"A":"Ảnh chụp trực tiếp không cần hiệu chỉnh","B":"Hình vẽ thu nhỏ bề mặt Trái Đất trên mặt phẳng theo những quy tắc toán học","C":"Một bảng liệt kê tên địa danh","D":"Bản ghi âm mô tả địa hình"},"key":"B","explanation":"Bản đồ là hình ảnh thu nhỏ, khái quát bề mặt Trái Đất lên mặt phẳng theo quy tắc toán học nhất định.","origin":"Bài giảng tr. 32"},{"n":42,"group":5,"question":"Trên bản đồ tỷ lệ 1:50.000, đoạn thẳng 1 cm tương ứng cự ly bằng phẳng ngoài thực địa là bao nhiêu?","options":{"A":"50 m","B":"100 m","C":"500 m","D":"5 km"},"key":"C","explanation":"1 cm × 50.000 = 50.000 cm = 500 m.","origin":"Bài giảng tr. 34-36 + bổ sung"},{"n":43,"group":5,"question":"Đo trên bản đồ tỷ lệ 1:50.000 được 3 cm. Cự ly bằng phẳng tương ứng ngoài thực địa là bao nhiêu?","options":{"A":"1,5 km","B":"0,6 km","C":"3 km","D":"15 km"},"key":"A","explanation":"3 × 50.000 cm = 150.000 cm = 1.500 m = 1,5 km.","origin":"Bài giảng tr. 34-36 + bổ sung"},{"n":44,"group":5,"question":"Trên bản đồ tỷ lệ 1:25.000, đoạn dài 4 cm tương ứng bao nhiêu ngoài thực địa (đo khoảng cách bằng phẳng)?","options":{"A":"250 m","B":"500 m","C":"750 m","D":"1 km"},"key":"D","explanation":"4 cm × 25.000 = 100.000 cm = 1 km.","origin":"Bài giảng tr. 34-36 + bổ sung"},{"n":45,"group":5,"question":"Một hình chữ nhật đo trên bản đồ tỷ lệ 1:50.000 có kích thước 2 cm × 3 cm. Diện tích bằng phẳng tương ứng ngoài thực địa là bao nhiêu?","options":{"A":"0,15 km²","B":"1,5 km²","C":"15 km²","D":"150 km²"},"key":"B","explanation":"Các cạnh ngoài thực địa là 1 km và 1,5 km; diện tích = 1 × 1,5 = 1,5 km².","origin":"Bổ sung cho đề cương tr. 37"},{"n":46,"group":5,"question":"Trên bản đồ tỷ lệ 1:100.000, một hình vuông có diện tích 1 cm² tương ứng diện tích mặt phẳng ngoài thực địa bao nhiêu?","options":{"A":"0,01 km²","B":"0,1 km²","C":"1 km²","D":"10 km²"},"key":"C","explanation":"Ở tỷ lệ này 1 cm trên bản đồ = 1 km ngoài thực địa, nên 1 cm² = 1 km².","origin":"Bổ sung cho đề cương tr. 37"},{"n":47,"group":5,"question":"Đường bình độ trên bản đồ địa hình là đường nối những điểm có đặc trưng nào?","options":{"A":"Cùng độ cao theo mốc cao độ","B":"Cùng khoảng cách đến trung tâm bản đồ","C":"Cùng tên địa danh","D":"Cùng độ dốc sườn núi"},"key":"A","explanation":"Đường bình độ nối các điểm cùng độ cao so với mốc tham chiếu quy định.","origin":"Đề cương tr. 37 + bổ sung"},{"n":48,"group":5,"question":"Trên cùng một bản đồ có khoảng cao đều thống nhất, khu vực các đường bình độ nằm sát nhau thường biểu thị điều gì?","options":{"A":"Địa hình bằng phẳng","B":"Địa hình luôn ở cao độ 0 m","C":"Sườn thoải","D":"Sườn dốc"},"key":"D","explanation":"Cùng chênh cao nhưng khoảng cách ngang nhỏ hơn nghĩa là sườn dốc hơn.","origin":"Đề cương tr. 37 + bổ sung"},{"n":49,"group":5,"question":"Đường bình độ cái thường được thể hiện trên bản đồ như thế nào?","options":{"A":"Chỉ bằng nét đứt đỏ","B":"Bằng nét đậm hơn các đường bình độ cơ bản","C":"Bằng ký hiệu hình sao","D":"Chỉ xuất hiện ở vùng mặt nước"},"key":"B","explanation":"Đường bình độ cái là đường bình độ được nhấn đậm, thường có ghi số độ cao giúp dễ đọc địa hình.","origin":"Đề cương tr. 37 + bổ sung"},{"n":50,"group":5,"question":"Trong hai bản đồ cùng kích thước tờ và cùng loại, tỷ lệ nào thường thể hiện địa hình chi tiết hơn?","options":{"A":"1:1.000.000","B":"1:500.000","C":"1:25.000","D":"1:200.000"},"key":"C","explanation":"Tỷ lệ 1:25.000 lớn hơn các tỷ lệ còn lại; một đơn vị chiều dài trên giấy ứng với đoạn thực địa ngắn hơn và thường cho nhiều chi tiết hơn.","origin":"Bài giảng tr. 34-36 + bổ sung"}]};
+const QUESTIONS=BANK.questions;
+const BY_ID=Object.fromEntries(QUESTIONS.map(q=>[String(q.n),q]));
+const ALL_QUESTIONS=QUESTIONS.map(q=>q.n);
+const STORAGE_KEY='mil1230-50-mastery-offline-v1';
+let state=loadState();
+let finishTimer=null;
+let transitionRunning=false;
+
+function defaultState(){
+  return {round:1, active:[...ALL_QUESTIONS], answers:{}, mastered:[], completed:false, history:[]};
+}
+function loadState(){
+  try{
+    const value=localStorage.getItem(STORAGE_KEY);
+    if(!value)return defaultState();
+    const s=JSON.parse(value);
+    if(!s||!Array.isArray(s.active)||!Array.isArray(s.mastered)||!s.answers||typeof s.answers!=='object')return defaultState();
+    s.active=[...new Set(s.active.map(Number).filter(n=>n>=1&&n<=50))];
+    s.mastered=[...new Set(s.mastered.map(Number).filter(n=>n>=1&&n<=50))];
+    if(!s.active.length)return defaultState();
+    s.round=Math.max(1,Math.floor(Number(s.round)||1));
+    s.completed=Boolean(s.completed);
+    s.history=Array.isArray(s.history)?s.history:[];
+    return s;
+  }catch(err){return defaultState();}
+}
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(err){/* May be restricted on some file:// browsers */}}
+function $(id){return document.getElementById(id)}
+function selected(q){return state.answers[String(q)]||''}
+function activeQuestion(q){return state.active.includes(q)}
+function clearCard(q){
+  const c=$('card-'+q); if(!c)return;
+  c.classList.remove('answered','correct','wrong');
+  c.querySelectorAll('.option-btn').forEach(b=>{
+    b.disabled=false;b.classList.remove('selected','good','bad');b.setAttribute('aria-pressed','false');
+  });
+  const f=$('feedback-'+q);f.className='feedback';f.textContent='';
+  const d=$('detail-'+q);d.classList.remove('show');d.querySelector('.detail-body').textContent='';d.querySelector('.source').textContent='';
+}
+function paintAnswer(q,letter){
+  const item=BY_ID[String(q)];const good=item.key===letter;const c=$('card-'+q);
+  c.classList.add('answered',good?'correct':'wrong');
+  c.classList.remove(good?'wrong':'correct');
+  c.querySelectorAll('.option-btn').forEach(b=>{
+    b.disabled=true;
+    b.setAttribute('aria-pressed',b.dataset.letter===letter?'true':'false');
+    b.classList.toggle('selected',b.dataset.letter===letter);
+    b.classList.toggle('good',b.dataset.letter===item.key);
+    b.classList.toggle('bad',b.dataset.letter===letter&&!good);
+  });
+  const f=$('feedback-'+q);
+  f.className='feedback '+(good?'ok':'bad');
+  f.textContent=good?'✓ Chính xác!':'✗ Chưa đúng. Đáp án: '+item.key+' – '+item.options[item.key];
+  const detail=$('detail-'+q);
+  detail.querySelector('.detail-body').textContent=item.explanation;
+  detail.querySelector('.source').textContent='Nguồn: '+item.origin;
+  detail.classList.add('show');
+}
+function chooseAnswer(q,letter){
+  if(state.completed||!activeQuestion(q)||selected(q)||transitionRunning)return;
+  if(!['A','B','C','D'].includes(letter))return;
+  state.answers[String(q)]=letter;
+  if(letter===BY_ID[String(q)].key&&!state.mastered.includes(q))state.mastered.push(q);
+  paintAnswer(q,letter);saveState();updateStats();
+  $('summary').classList.remove('show');
+  if(state.active.every(n=>Boolean(selected(n)))){
+    finishTimer=setTimeout(finishRound,2750);
+    $('subtitle').textContent='Đã trả lời xong vòng '+state.round+'. Đang tổng hợp để chuyển vòng…';
+  }
+}
+function currentStats(){
+  let answered=0,correct=0;
+  for(const n of state.active){
+    const a=selected(n); if(a){answered++;if(a===BY_ID[String(n)].key)correct++;}
+  }
+  return{answered,correct,wrong:answered-correct,blank:state.active.length-answered,total:state.active.length};
+}
+function updateStats(){
+  const s=currentStats();
+  $('count').textContent=state.completed?`Hoàn thành · ${state.round} vòng`:`Vòng ${state.round} · Đã trả lời ${s.answered}/${s.total}`;
+  $('score').textContent=state.completed?`50/50 đã thuộc ✓`:`${s.correct}/${s.answered} đúng · ${state.mastered.length}/50 đã thuộc`;
+  const percent=s.total?(s.answered/s.total*100):100;
+  $('progress').style.width=percent+'%';
+  $('progressTrack').setAttribute('aria-valuenow',String(Math.round(percent)));
+  $('sCorrect').textContent=s.correct;$('sWrong').textContent=s.wrong;$('sBlank').textContent=s.blank;
+  $('summaryTitle').textContent=state.completed?'Hoàn thành tất cả 50 câu':`Kết quả vòng ${state.round}`;
+  $('masterySummary').textContent=`Đã nắm chắc ${state.mastered.length}/50 câu qua ${state.round} vòng luyện. Đã nắm chắc nghĩa là đã từng chọn đúng ở một vòng.`;
+  $('nextUnanswered').disabled=state.completed||s.blank===0;
+  const container=$('groupSummary');container.replaceChildren();
+  for(const [groupId,groupName] of Object.entries(BANK.groups)){
+    const groupQuestions=QUESTIONS.filter(q=>String(q.group)===groupId);
+    const mastered=groupQuestions.filter(q=>state.mastered.includes(q.n)).length;
+    const line=document.createElement('div');line.className='group-status';
+    const label=document.createElement('span');label.textContent=groupName;
+    const value=document.createElement('b');value.textContent=`${mastered}/${groupQuestions.length}`;
+    line.append(label,value);container.appendChild(line);
+  }
+}
+function setNotice(type,txt){
+  const n=$('notice'); n.className='notice'+(type?' '+type:''); n.replaceChildren();
+  const bold=document.createElement('b');
+  bold.textContent=type==='success'?'✓ Hoàn thành! ':type==='retry'?'Ôn lại câu sai: ':'Quy tắc: ';
+  n.append(bold,document.createTextNode(txt));
+}
+function renderRound(){
+  for(const q of ALL_QUESTIONS){
+    const c=$('card-'+q);c.hidden=!activeQuestion(q);c.style.display=activeQuestion(q)?'':'none';
+    clearCard(q);
+  }
+  for(const q of state.active){if(selected(q))paintAnswer(q,selected(q));}
+  if(state.completed){
+    $('subtitle').textContent=`Bạn đã trả lời đúng toàn bộ 50 câu sau ${state.round} vòng.`;
+    setNotice('success',`Bạn đã làm đúng cả 50 câu MIL1230. Bấm “Làm lại từ đầu” nếu muốn kiểm tra lại kiến thức.`);
+  }else if(state.round>1){
+    $('subtitle').textContent=`Vòng ${state.round}: luyện lại ${state.active.length} câu còn sai.`;
+    setNotice('retry',`Vòng ${state.round} có ${state.active.length} câu sai từ vòng trước. Mỗi câu chỉ được chọn một lần. Câu vẫn sai sẽ xuất hiện ở vòng tiếp theo.`);
+  }else{
+    $('subtitle').textContent='Vòng 1: làm đủ 50 câu. Mỗi câu chỉ được chọn một lần.';
+    setNotice('', 'Sau khi chọn đáp án, câu sẽ bị khóa và hiện giải thích. Làm đủ 50 câu; các câu sai được chuyển sang vòng sau cho đến khi bạn làm đúng hết. Tiến độ được lưu trên trình duyệt nếu trình duyệt cho phép.');
+  }
+  updateStats();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function finishRound(){
+  if(transitionRunning||state.completed||!state.active.every(q=>Boolean(selected(q))))return;
+  const s=currentStats();
+  const wrong=state.active.filter(q=>selected(q)!==BY_ID[String(q)].key);
+  state.history.push({round:state.round,total:s.total,correct:s.correct,wrong:s.wrong});
+  if(!wrong.length){
+    state.completed=true;saveState();renderRound();$('summary').classList.add('show');return;
+  }
+  transitionRunning=true;
+  setNotice('retry',`Vòng ${state.round} có ${wrong.length} câu chưa đúng. Chuyển sang vòng ${state.round+1} để ôn lại những câu này.`);
+  setTimeout(()=>{
+    state.round+=1;state.active=wrong;state.answers={};state.completed=false;
+    saveState();transitionRunning=false;renderRound();
+  },900);
+}
+function jumpToNext(){
+  const next=state.active.find(q=>!selected(q));
+  if(next){$('card-'+next).scrollIntoView({behavior:'smooth',block:'start'});}
+}
+document.querySelectorAll('.option-btn').forEach(btn=>btn.addEventListener('click',()=>chooseAnswer(Number(btn.dataset.q),btn.dataset.letter)));
+$('summaryBtn').addEventListener('click',()=>{
+  const s=$('summary');s.classList.toggle('show');
+  if(s.classList.contains('show'))s.scrollIntoView({behavior:'smooth',block:'start'});
+});
+$('nextUnanswered').addEventListener('click',jumpToNext);
+$('reset').addEventListener('click',()=>{
+  if(!confirm('Xóa tiến độ ôn tập và làm lại toàn bộ 50 câu từ đầu?'))return;
+  if(finishTimer!==null){clearTimeout(finishTimer);finishTimer=null;}
+  transitionRunning=false;state=defaultState();saveState();$('summary').classList.remove('show');renderRound();
+});
+renderRound();
+if(!state.completed&&state.active.every(q=>Boolean(selected(q))))finishTimer=setTimeout(finishRound,600);
+
+</script>
+</body>
+</html>
